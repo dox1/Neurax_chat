@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ثانوية مفدي زكريا — إدارة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+<style>
+body { font-family:'Cairo',sans-serif; margin:0; padding:0; background:#e0e5ec; direction:rtl; }
+.app { max-width:420px; margin:20px auto; background:#fff; min-height:90vh; box-shadow:0 5px 15px rgba(0,0,0,0.2); border-radius:15px; overflow:hidden; position:relative; }
+header { background:#4a76a8; color:#fff; text-align:center; padding:1rem; font-size:1.2rem; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+.page { display:none; padding:1rem; animation:fadeIn 0.5s; }
+.active { display:block; }
+input, select, button { width:100%; padding:0.8rem; margin:0.5rem 0; border-radius:10px; border:1px solid #ccc; font-size:1rem; box-sizing:border-box; }
+input:focus, select:focus { border-color:#4a76a8; outline:none; box-shadow:0 0 5px rgba(74,118,168,0.5); }
+button { background:#4a76a8; color:#fff; border:none; cursor:pointer; transition:0.3s; font-weight:bold; }
+button:hover { background:#3b5c85; transform:translateY(-2px); }
+button:active { transform:translateY(0); }
+table { width:100%; border-collapse:collapse; margin-top:1rem; border-radius:10px; overflow:hidden; }
+th, td { border:1px solid #ccc; padding:0.5rem; text-align:center; background:#f9f9f9; }
+th { background:#4a76a8; color:#fff; }
+.error { color:red; font-size:0.8rem; }
+#newsTicker { overflow:hidden; white-space:nowrap; box-sizing:border-box; background:#f0f2f5; padding:0.5rem; border-radius:8px; margin-bottom:1rem; }
+#newsTicker span { display:inline-block; padding-left:100%; animation:ticker 15s linear infinite; }
+@keyframes ticker { 0%{transform:translateX(0);} 100%{transform:translateX(-100%);} }
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+.loader { border: 4px solid #f3f3f3; border-top: 4px solid #4a76a8; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display:inline-block; }
+@keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>ثانوية مفدي زكريا</header>
+
+  <!-- الصفحة الرئيسية -->
+  <div class="page active" id="homePage">
+    <button onclick="openPage('studentRegister')">تسجيل تلميذ</button>
+    <button onclick="openPage('studentLogin')">دخول تلميذ</button>
+    <button onclick="openPage('adminLogin')">دخول المدير</button>
+    <button onclick="openPage('librarianLogin')">دخول المكتبة</button>
+  </div>
+
+  <!-- تسجيل التلميذ -->
+  <div class="page" id="studentRegister">
+    <h3>تسجيل التلميذ</h3>
+    <input id="sName" placeholder="الإسم">
+    <span class="error" id="nameError"></span>
+    <input id="sLast" placeholder="اللقب">
+    <span class="error" id="lastError"></span>
+    <input id="sClass" placeholder="القسم">
+    <select id="sGender"><option value="ذكر">ذكر</option><option value="أنثى">أنثى</option></select>
+    <input id="sPassword" type="password" placeholder="كلمة المرور">
+    <button onclick="registerStudent()">إرسال</button>
+    <button onclick="backToHome()">رجوع</button>
+    <p id="registerMsg"></p>
+  </div>
+
+  <!-- دخول التلميذ -->
+  <div class="page" id="studentLogin">
+    <h3>دخول التلميذ</h3>
+    <input id="loginName" placeholder="الإسم">
+    <input id="loginLast" placeholder="اللقب">
+    <input id="loginPass" type="password" placeholder="كلمة المرور">
+    <button onclick="loginStudent()">دخول</button>
+    <button onclick="backToHome()">رجوع</button>
+    <p id="loginMsg"></p>
+  </div>
+
+  <!-- صفحة التلميذ -->
+  <div class="page" id="studentPage">
+    <h3>مرحباً <span id="studentWelcome"></span></h3>
+    <button onclick="openPage('libraryPage')">المكتبة</button>
+    <div id="newsTicker"><span id="newsContent"></span></div>
+    <h4>إشعاراتك</h4>
+    <ul id="studentMessages"></ul>
+    <button onclick="logoutStudent()">خروج</button>
+  </div>
+
+  <!-- صفحة المكتبة للتلميذ -->
+  <div class="page" id="libraryPage">
+    <h3>المكتبة</h3>
+    <input id="bookSearch" placeholder="بحث عن كتاب..." oninput="renderBooks()">
+    <table id="booksTable"><tr><th>الكتاب</th><th>الحالة</th><th>طلب</th></tr></table>
+    <button onclick="backToStudent()">رجوع</button>
+  </div>
+
+  <!-- دخول المدير -->
+  <div class="page" id="adminLogin">
+    <h3>دخول المدير</h3>
+    <input id="adminPass" type="password" placeholder="كلمة مرور المدير">
+    <button onclick="loginAdmin()">دخول</button>
+    <button onclick="backToHome()">رجوع</button>
+    <p id="adminMsg"></p>
+  </div>
+
+  <!-- صفحة المدير -->
+  <div class="page" id="adminPage">
+    <h3>لوحة المدير</h3>
+
+    <h4>طلبات التسجيل</h4>
+    <table id="pendingStudentsTable"><tr><th>الإسم</th><th>اللقب</th><th>القسم</th><th>الجنس</th><th>كلمة المرور</th><th>قبول</th><th>حذف</th></tr></table>
+
+    <h4>التلاميذ المقبولون</h4>
+    <table id="acceptedStudentsTable"><tr><th>الإسم</th><th>اللقب</th><th>القسم</th><th>الجنس</th><th>كلمة المرور</th><th>حذف</th></tr></table>
+
+    <h4>الأخبار الحالية</h4>
+    <table id="newsTable"><tr><th>الخبر</th><th>حذف</th></tr></table>
+
+    <h4>شريط الأخبار</h4>
+    <input id="newsInput" placeholder="أضف خبر جديد">
+    <button onclick="addNews()">إرسال</button>
+    <button onclick="backToHome()">خروج</button>
+  </div>
+
+  <!-- دخول المكتبي -->
+  <div class="page" id="librarianLogin">
+    <h3>دخول صاحب المكتبة</h3>
+    <input id="libPass" type="password" placeholder="كلمة مرور المكتبة">
+    <button onclick="loginLibrarian()">دخول</button>
+    <button onclick="backToHome()">رجوع</button>
+    <p id="libMsg"></p>
+  </div>
+
+  <!-- صفحة المكتبي -->
+  <div class="page" id="librarianPage">
+    <h3>لوحة المكتبة</h3>
+    <input id="newBookTitle" placeholder="أضف كتاب جديد">
+    <button onclick="addBook()">إضافة كتاب</button>
+    <table id="booksLibraryTable"><tr><th>الكتاب</th><th>متاح؟</th><th>حذف</th></tr></table>
+
+    <h4>طلبات الكتب</h4>
+    <table id="requestsTable"><tr><th>اسم التلميذ</th><th>القسم</th><th>الكتاب</th><th>الموافقة</th><th>الرفض</th></tr></table>
+
+    <h3>الكتب المستعارة</h3>
+    <table id="borrowedBooksTable"><thead><tr><th>اسم الكتاب</th><th>اسم التلميذ</th><th>مدة الاسترجاع</th><th>إرجاع</th></tr></thead><tbody></tbody></table>
+
+    <button onclick="logoutLibrarian()">خروج</button>
+  </div>
+
+</div>
+
+<!-- استخدم imports المودولار فقط -->
+<script type="module">
+// Firebase (modular)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, getDocs, onSnapshot,
+  updateDoc, doc, query, where, deleteDoc, getDoc
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA5mE3ywlxIkgSGSTGRBGx5Z1nt4dTNtac",
+  authDomain: "mofdizakria-62b05.firebaseapp.com",
+  projectId: "mofdizakria-62b05",
+  storageBucket: "mofdizakria-62b05.appspot.com",
+  messagingSenderId: "422813644523",
+  appId: "1:422813644523:web:e779a0a84087d05a2870ae"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let currentStudent = null;
+
+// ---------- تنقل ----------
+window.openPage = id => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+window.backToHome = () => openPage('homePage');
+window.backToStudent = () => openPage('studentPage');
+window.logoutStudent = () => { currentStudent = null; backToHome(); renderNews(); renderBooks(); renderStudentMessages(); }
+window.logoutLibrarian = () => backToHome();
+
+// ---------- تسجيل تلميذ ----------
+window.registerStudent = async () => {
+  const name = document.getElementById('sName').value.trim();
+  const last = document.getElementById('sLast').value.trim();
+  const sClass = document.getElementById('sClass').value.trim();
+  const gender = document.getElementById('sGender').value;
+  const password = document.getElementById('sPassword').value.trim();
+  const registerMsg = document.getElementById('registerMsg');
+
+  if(!name || !last || !sClass || !password){ registerMsg.innerText = 'املأ جميع الحقول'; return; }
+
+  // تحقق التكرار الكامل (name+last+sClass+gender)
+  const qDup = query(collection(db,'pendingStudents'), where('name','==',name), where('last','==',last), where('sClass','==',sClass), where('gender','==',gender));
+  const dupSnap = await getDocs(qDup);
+  const qDup2 = query(collection(db,'acceptedStudents'), where('name','==',name), where('last','==',last), where('sClass','==',sClass), where('gender','==',gender));
+  const dupSnap2 = await getDocs(qDup2);
+  if(!dupSnap.empty || !dupSnap2.empty){ registerMsg.innerText = 'يوجد تلميذ بنفس المعلومات'; return; }
+
+  await addDoc(collection(db,'pendingStudents'), { name, last, sClass, gender, password });
+  registerMsg.innerText = 'تم إرسال الطلب بانتظار الموافقة';
+  document.getElementById('sName').value=''; document.getElementById('sLast').value=''; document.getElementById('sClass').value=''; document.getElementById('sPassword').value='';
+}
+
+// ---------- دخول تلميذ ----------
+window.loginStudent = async () => {
+  const name = document.getElementById('loginName').value.trim();
+  const last = document.getElementById('loginLast').value.trim();
+  const password = document.getElementById('loginPass').value.trim();
+  const q = query(collection(db,'acceptedStudents'), where('name','==',name), where('last','==',last), where('password','==',password));
+  const snap = await getDocs(q);
+  if(snap.empty){ document.getElementById('loginMsg').innerText = 'الإسم/اللقب أو كلمة المرور غير صحيحة أو لم يتم الموافقة'; return; }
+  const docSnap = snap.docs[0];
+  currentStudent = { id: docSnap.id, ...docSnap.data() };
+  document.getElementById('studentWelcome').innerText = `${currentStudent.name} ${currentStudent.last}`;
+  openPage('studentPage');
+  renderNews(); renderBooks(); renderStudentMessages();
+}
+
+// ---------- الأخبار ----------
+window.addNews = async () => {
+  const newsInput = document.getElementById('newsInput');
+  const news = newsInput.value.trim();
+  if(!news) return;
+  await addDoc(collection(db,'news'), { text: news, createdAt: Date.now() });
+  newsInput.value = '';
+  renderNews();
+  renderNewsAdmin();
+}
+async function renderNews(){
+  const snap = await getDocs(collection(db,'news'));
+  const arr = [];
+  snap.forEach(d=>arr.push(d.data().text));
+  document.getElementById('newsContent').innerText = arr.join(' — ');
+}
+window.renderNews = renderNews;
+
+async function renderNewsAdmin(){
+  const table = document.getElementById('newsTable');
+  table.innerHTML = '<tr><th>الخبر</th><th>حذف</th></tr>';
+  const snap = await getDocs(collection(db,'news'));
+  snap.forEach(d=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${d.data().text}</td><td><button onclick="deleteNews('${d.id}')">حذف</button></td>`;
+    table.appendChild(tr);
+  });
+}
+window.renderNewsAdmin = renderNewsAdmin;
+
+window.deleteNews = async (id) => {
+  if(!confirm('تأكيد حذف الخبر؟')) return;
+  await deleteDoc(doc(db,'news',id));
+  await renderNews(); await renderNewsAdmin();
+}
+
+// ---------- مدير: طلبات التسجيل وقبول/حذف ----------
+async function renderPendingStudents(){
+  const table = document.getElementById('pendingStudentsTable');
+  table.innerHTML = '<tr><th>الإسم</th><th>اللقب</th><th>القسم</th><th>الجنس</th><th>كلمة المرور</th><th>قبول</th><th>حذف</th></tr>';
+  const snap = await getDocs(collection(db,'pendingStudents'));
+  snap.forEach(d=>{
+    const data = d.data();
+    const row = table.insertRow();
+    row.insertCell().innerText = data.name;
+    row.insertCell().innerText = data.last;
+    row.insertCell().innerText = data.sClass;
+    row.insertCell().innerText = data.gender;
+    row.insertCell().innerText = data.password;
+    const btnAccept = document.createElement('button');
+    btnAccept.innerText = 'قبول';
+    btnAccept.onclick = ()=> approveStudent(d.id);
+    row.insertCell().appendChild(btnAccept);
+    const btnDel = document.createElement('button');
+    btnDel.innerText = 'حذف';
+    btnDel.onclick = ()=> deletePendingStudent(d.id);
+    row.insertCell().appendChild(btnDel);
+  });
+}
+window.renderPendingStudents = renderPendingStudents;
+
+window.approveStudent = async (id) => {
+  // قبول التلميذ (نقل من pending إلى accepted)
+  const snap = await getDoc(doc(db,'pendingStudents',id));
+  if(!snap.exists()) return;
+  const data = snap.data();
+  await addDoc(collection(db,'acceptedStudents'), data);
+  await deleteDoc(doc(db,'pendingStudents',id));
+  renderPendingStudents(); renderAcceptedStudents();
+}
+
+window.deletePendingStudent = async (id) => {
+  await deleteDoc(doc(db,'pendingStudents',id));
+  renderPendingStudents();
+}
+
+async function renderAcceptedStudents(){
+  const table = document.getElementById('acceptedStudentsTable');
+  table.innerHTML = '<tr><th>الإسم</th><th>اللقب</th><th>القسم</th><th>الجنس</th><th>كلمة المرور</th><th>حذف</th></tr>';
+  const snap = await getDocs(collection(db,'acceptedStudents'));
+  snap.forEach(d=>{
+    const data = d.data();
+    const row = table.insertRow();
+    row.insertCell().innerText = data.name;
+    row.insertCell().innerText = data.last;
+    row.insertCell().innerText = data.sClass;
+    row.insertCell().innerText = data.gender;
+    row.insertCell().innerText = data.password;
+    const btnDel = document.createElement('button');
+    btnDel.innerText = 'حذف';
+    btnDel.onclick = ()=> deleteAcceptedStudent(d.id);
+    row.insertCell().appendChild(btnDel);
+  });
+}
+window.renderAcceptedStudents = renderAcceptedStudents;
+
+window.deleteAcceptedStudent = async (id) => {
+  await deleteDoc(doc(db,'acceptedStudents',id));
+  renderAcceptedStudents();
+}
+
+// ---------- المكتبي: كتب + طلبات + موافقة/رفض + borrowedBooks ----------
+window.addBook = async () => {
+  const t = document.getElementById('newBookTitle').value.trim();
+  if(!t) return;
+  await addDoc(collection(db,'books'), { title: t, available: true });
+  document.getElementById('newBookTitle').value = '';
+  renderBooksLibrary(); renderBooks();
+}
+
+window.deleteBook = async (id) => {
+  await deleteDoc(doc(db,'books',id));
+  renderBooksLibrary(); renderBooks();
+}
+
+async function renderBooksLibrary(){
+  const table = document.getElementById('booksLibraryTable');
+  table.innerHTML = '<tr><th>الكتاب</th><th>متاح؟</th><th>حذف</th></tr>';
+  const snap = await getDocs(collection(db,'books'));
+  snap.forEach(d=>{
+    const data = d.data();
+    const row = table.insertRow();
+    row.insertCell().innerText = data.title;
+    row.insertCell().innerText = data.available ? 'متاح' : 'غير متاح';
+    const btnDel = document.createElement('button');
+    btnDel.innerText = 'حذف';
+    btnDel.onclick = ()=> deleteBook(d.id);
+    row.insertCell().appendChild(btnDel);
+  });
+}
+window.renderBooksLibrary = renderBooksLibrary;
+
+// طلب الكتب من التلميذ
+window.requestBook = async (bookId, bookTitle) => {
+  if(!currentStudent) { alert('يجب تسجيل الدخول أولاً'); return; }
+  await addDoc(collection(db,'bookRequests'), {
+    studentId: currentStudent.id,
+    studentName: `${currentStudent.name} ${currentStudent.last}`,
+    studentClass: currentStudent.sClass,
+    bookId, bookTitle,
+    status: 'pending',
+    createdAt: Date.now()
+  });
+  renderBooks();
+  alert('تم إرسال الطلب');
+}
+
+// عرض طلبات المكتبة (للمكتبي)
+async function renderRequests(){
+  const table = document.getElementById('requestsTable');
+  table.innerHTML = '<tr><th>اسم التلميذ</th><th>القسم</th><th>الكتاب</th><th>الموافقة</th><th>الرفض</th></tr>';
+  const snap = await getDocs(collection(db,'bookRequests'));
+  snap.forEach(d=>{
+    const data = d.data();
+    const row = table.insertRow();
+    row.insertCell().innerText = data.studentName;
+    row.insertCell().innerText = data.studentClass;
+    row.insertCell().innerText = data.bookTitle;
+    const btnAp = document.createElement('button'); btnAp.innerText='موافقة';
+    btnAp.onclick = ()=> approveBook(d.id, data.bookId, data.bookTitle, data.studentId, data.studentName);
+    row.insertCell().appendChild(btnAp);
+    const btnRj = document.createElement('button'); btnRj.innerText='رفض';
+    btnRj.onclick = ()=> rejectBook(d.id, data.studentId, data.bookTitle);
+    row.insertCell().appendChild(btnRj);
+  });
+}
+window.renderRequests = renderRequests;
+
+window.approveBook = async (requestId, bookId, bookTitle, studentId, studentName) => {
+  const days = prompt('أدخل مدة الإرجاع بالأيام (مثال: 7):');
+  if(!days) return;
+  // علامة أن الكتاب الآن مستعار
+  await updateDoc(doc(db,'books',bookId), { available: false });
+  // سجل الاستعارة في مجموعة borrowedBooks
+  const returnInfo = `${days} يوم/أيام`;
+  await addDoc(collection(db,'borrowedBooks'), {
+    bookId, bookTitle, studentId, studentName, returnInfo, borrowedAt: Date.now()
+  });
+  // إشعار للتلميذ
+  await addDoc(collection(db,'notifications'), {
+    studentId, message: `تمت الموافقة على كتاب "${bookTitle}" لمدة ${returnInfo}`, read: false, createdAt: Date.now()
+  });
+  // حذف طلب الاستعارة
+  await deleteDoc(doc(db,'bookRequests',requestId));
+  renderRequests(); renderBooksLibrary(); renderBooks(); renderBorrowedBooks(); renderAdminNotifications();
+  alert('تمت الموافقة وإرسال إشعار للتلميذ');
+}
+
+window.rejectBook = async (requestId, studentId, bookTitle) => {
+  await addDoc(collection(db,'notifications'), { studentId, message: `تم رفض طلب كتاب "${bookTitle}"`, read: false, createdAt: Date.now() });
+  await deleteDoc(doc(db,'bookRequests',requestId));
+  renderRequests(); renderAdminNotifications();
+  alert('تم الرفض وإرسال إشعار للتلميذ');
+}
+
+// ---------- جدول الكتب المستعارة (onSnapshot ليحدّث تلقائياً) ----------
+const borrowedTbody = document.querySelector('#borrowedBooksTable tbody');
+function renderBorrowedBooks(){ /* fallback if onSnapshot not yet bound */ }
+window.renderBorrowedBooks = renderBorrowedBooks;
+
+onSnapshot(collection(db,'borrowedBooks'), snapshot=>{
+  // نملأ tbody
+  if(!borrowedTbody) return;
+  borrowedTbody.innerHTML = '';
+  snapshot.forEach(docSnap=>{
+    const b = docSnap.data();
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${b.bookTitle}</td>
+      <td>${b.studentName}</td>
+      <td>${b.returnInfo || ''}</td>
+      <td><button onclick="returnBook('${docSnap.id}','${b.bookId}')">إرجاع</button></td>
+    `;
+    borrowedTbody.appendChild(tr);
+  });
+});
+
+// دالة إرجاع الكتاب
+window.returnBook = async (borrowId, bookId) => {
+  if(!confirm('تأكيد إرجاع الكتاب؟')) return;
+  // حذف سجل الاستعارة
+  await deleteDoc(doc(db,'borrowedBooks', borrowId));
+  // تحديث حالة الكتاب إلى متاح
+  await updateDoc(doc(db,'books', bookId), { available: true });
+  // إرسال إشعار للتلميذ إن رغبت — هنا نكتفي بعرض رسالة
+  renderBooksLibrary(); renderBooks(); renderBorrowedBooks();
+  alert('تم إرجاع الكتاب وأصبح متاحاً للطلب مرة أخرى');
+}
+
+// ---------- عرض الكتب للتلميذ ----------
+async function renderBooks(){
+  const tbl = document.getElementById('booksTable');
+  tbl.innerHTML = '<tr><th>الكتاب</th><th>الحالة</th><th>طلب</th></tr>';
+  const snap = await getDocs(collection(db,'books'));
+  snap.forEach(d=>{
+    const data = d.data();
+    const row = tbl.insertRow();
+    row.insertCell().innerText = data.title;
+    row.insertCell().innerText = data.available ? 'متاح' : 'غير متاح';
+    const btn = document.createElement('button');
+    btn.innerText = 'طلب';
+    btn.disabled = !data.available;
+    btn.onclick = ()=> requestBook(d.id, data.title);
+    row.insertCell().appendChild(btn);
+  });
+}
+window.renderBooks = renderBooks;
+
+// ---------- إشعارات التلميذ ----------
+async function renderStudentMessages(){
+  if(!currentStudent) return;
+  const ul = document.getElementById('studentMessages');
+  ul.innerHTML = '';
+  const q = query(collection(db,'notifications'), where('studentId','==', currentStudent.id));
+  const snap = await getDocs(q);
+  snap.forEach(d=>{
+    const data = d.data();
+    const li = document.createElement('li');
+    li.innerHTML = `${data.message} ${data.read ? '(مقروء)' : '(غير مقروء)'} <button onclick="markNotifRead('${d.id}')">وضع كمقروء</button> <button onclick="deleteNotif('${d.id}')">حذف</button>`;
+    ul.appendChild(li);
+  });
+}
+window.renderStudentMessages = renderStudentMessages;
+
+window.markNotifRead = async (id) => {
+  await updateDoc(doc(db,'notifications',id), { read: true });
+  renderStudentMessages(); renderAdminNotifications();
+}
+window.deleteNotif = async (id) => {
+  await deleteDoc(doc(db,'notifications',id));
+  renderStudentMessages(); renderAdminNotifications();
+}
+
+// عرض إشعارات المدير (جدول عام)
+async function renderAdminNotifications(){
+  const table = document.getElementById('requestsTable'); // reuse? we will also show admin notifications below
+  // but we created a function to fill #adminNotifications via getDocs on notifications
+  const adminTable = document.getElementById('newsTable'); // reuse newsTable? To avoid confusion, create separate - but for simplicity, implement simple viewer below:
+  // create a viewer for notifications in console or keep function used earlier in approve/reject flows
+  // We'll implement simple table for admin notifications in console:
+  // Alternatively, update borrowed / requests etc are visible to librarian; manager can read notifications by querying collection('notifications') manually if needed.
+}
+window.renderAdminNotifications = async () => {
+  // We'll fill admin notifications into console or reuse newsTable area (not essential)
+  const snap = await getDocs(collection(db,'notifications'));
+  // nothing else needed here for now
+}
+
+// ---------- دخول المدير والمكتبي مبدئياً (بتهيئة قياسية) ----------
+window.loginAdmin = async () => {
+  const pass = document.getElementById('adminPass').value.trim();
+  // افتراض: مجموعة 'admins' تحتوي مستند واحد مع حقل password
+  const snap = await getDocs(collection(db,'admins'));
+  if(!snap.empty && snap.docs[0].data().password === pass){
+    openPage('adminPage'); renderPendingStudents(); renderAcceptedStudents(); renderNewsAdmin();
+  } else document.getElementById('adminMsg').innerText = 'كلمة مرور خاطئة';
+}
+
+window.loginLibrarian = async () => {
+  const pass = document.getElementById('libPass').value.trim();
+  const snap = await getDocs(collection(db,'librarians'));
+  if(!snap.empty && snap.docs[0].data().password === pass){
+    openPage('librarianPage'); renderBooksLibrary(); renderRequests(); /* borrowed onSnapshot already active */ renderAdminNotifications();
+  } else document.getElementById('libMsg').innerText = 'كلمة مرور خاطئة';
+}
+
+// initialize views once
+renderNews(); renderNewsAdmin(); renderBooksLibrary(); renderBooks(); renderPendingStudents(); renderAcceptedStudents(); renderRequests(); // renderBorrowedBooks via onSnapshot
+
+</script>
+</body>
+</html>

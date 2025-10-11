@@ -1,0 +1,3345 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PRconnect — الصفحة الرئيسية</title>
+
+  <!-- Bootstrap RTL -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Tajawal Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ====== متغيرات التصميم ====== */
+    :root {
+      --primary: #1a3a5f;
+      --primary-dark: #0d253c;
+      --primary-light: #2a517a;
+      --secondary: #d4af37;
+      --secondary-dark: #b8941f;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --accent: rgba(26, 58, 95, 0.08);
+      --text: #2d3748;
+      --text-light: #718096;
+      --border: #e2e8f0;
+    }
+    
+    /* ====== الأساسيات ====== */
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Tajawal", "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    /* ====== الهيدر المحسّن مع الشعار ====== */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1200;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      height: 45px;
+      width: auto;
+      border-radius: 8px;
+    }
+    .logo-text {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: .4px;
+    }
+    .header-icons { display:flex; gap:12px; align-items:center; }
+    .header-icons button {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #fff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding:8px;
+      border-radius:10px;
+      transition: all 0.2s ease;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-icons button:hover { 
+      background: rgba(255,255,255,0.2); 
+      transform: translateY(-2px);
+    }
+    
+    /* ====== شريط البحث ====== */
+    .search-container {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      width: 100%;
+      display:flex;
+      justify-content:center;
+      padding: 0 12px;
+      z-index: 1100;
+      pointer-events: none;
+    }
+    .search-box {
+      width: 100%;
+      max-width: 920px;
+      margin: 10px 0;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      padding: 12px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      pointer-events: auto;
+      transform-origin: top center;
+      transition: all 0.35s ease;
+      overflow:hidden;
+      border: 1px solid var(--border);
+    }
+    .search-box.hidden { 
+      max-height: 0; 
+      opacity: 0; 
+      padding:0 12px;
+      transform: scaleY(0);
+    }
+    .search-box.visible { 
+      max-height: 120px; 
+      opacity: 1;
+      transform: scaleY(1);
+    }
+    .search-box input {
+      flex:1;
+      border: 1px solid var(--border);
+      padding:12px 16px;
+      border-radius: 10px;
+      outline:none;
+      font-size:1rem;
+      transition: all 0.2s;
+    }
+    .search-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 58, 95, 0.1);
+    }
+    .search-box .btn-search {
+      background: var(--primary);
+      color:#fff;
+      border:none;
+      padding:10px 18px;
+      border-radius:10px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .search-box .btn-search:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ====== الشريط الجانبي المحسّن ====== */
+    #sidebar {
+      position: fixed;
+      top: 0;
+      right: -320px;
+      width: 300px;
+      height: 100vh;
+      background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-left: none;
+      box-shadow: -4px 0 30px rgba(0,0,0,0.25);
+      padding: 24px;
+      transition: right 0.4s cubic-bezier(0.2,0.9,0.2,1);
+      z-index: 1300;
+      overflow-y: auto;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    #sidebar.active { right:0; }
+    #sidebar .brand {
+      font-weight:800; 
+      color: #fff; 
+      margin-bottom:24px;
+      display:flex; 
+      align-items:center; 
+      gap:12px;
+      font-size: 1.4rem;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    #sidebar ul { list-style:none; padding:0; margin:0; }
+    #sidebar li { margin:10px 0; }
+    #sidebar a.main-link {
+      display:flex; 
+      align-items:center; 
+      gap:12px;
+      padding:14px 16px; 
+      border-radius:12px;
+      color: rgba(255,255,255,0.9); 
+      text-decoration:none; 
+      font-weight:600;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.25s ease;
+    }
+    #sidebar a.main-link:hover {
+      transform: translateX(-8px);
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.15);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    #sidebar .icon { 
+      color: var(--secondary); 
+      width:26px; 
+      text-align:center; 
+      font-size: 1.1rem;
+    }
+    
+    /* القوائم الفرعية */
+    #sidebar .sublist {
+      margin: 12px 0 12px 20px;
+      padding-right: 12px;
+      display:none;
+      border-right: 2px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      background: rgba(0,0,0,0.1);
+    }
+    #sidebar li.open > .sublist { 
+      display:block; 
+      animation: fadeIn 0.3s ease; 
+    }
+    #sidebar .sublist a {
+      display:block; 
+      padding:10px 14px; 
+      text-decoration:none; 
+      color: rgba(255,255,255,0.8); 
+      border-radius:8px; 
+      font-weight:500;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+    #sidebar .sublist a:hover { 
+      background: rgba(255,255,255,0.1); 
+      transform: translateX(-4px); 
+      color: #fff;
+    }
+
+    @keyframes fadeIn { 
+      from { opacity:0; transform:translateY(-8px) } 
+      to { opacity:1; transform:none } 
+    }
+
+    /* طبقة التعتيم */
+    .overlay {
+      position: fixed; 
+      inset:0; 
+      background: rgba(0,0,0,0.5); 
+      z-index: 1250;
+      display:none; 
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+    .overlay.visible { display:block; }
+
+    /* ====== المحتوى الرئيسي ====== */
+    main { 
+      margin:0; 
+      padding:0; 
+      min-height: 100vh;
+    }
+
+    /* ====== قسم المقدمة المحسّن ====== */
+    .about-section {
+      position: relative;
+      background: linear-gradient(rgba(26, 58, 95, 0.85), rgba(13, 37, 60, 0.9)), 
+                  url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') center/cover no-repeat;
+      height: 75vh;
+      display:flex; 
+      align-items:center; 
+      justify-content:center;
+      padding: 20px;
+    }
+    .about-overlay {
+      background: rgba(255,255,255,0.95);
+      color: var(--text);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 92%;
+      max-width: 1000px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      border: 1px solid var(--border);
+    }
+    .about-overlay h2 { 
+      font-size: 2.4rem; 
+      margin-bottom: 16px; 
+      color: var(--primary);
+      font-weight: 800;
+    }
+    .about-overlay p { 
+      color: var(--text-light); 
+      line-height:1.8; 
+      font-size:1.1rem; 
+      margin-bottom: 24px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .about-overlay .btn-primary {
+      background: var(--primary);
+      border: none;
+      padding: 12px 32px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(26, 58, 95, 0.2);
+    }
+    .about-overlay .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(26, 58, 95, 0.3);
+    }
+    .about-details { 
+      display:none; 
+      margin-top: 24px; 
+      background: var(--accent); 
+      padding: 24px; 
+      border-radius: 12px; 
+      color: var(--text);
+      text-align: right;
+      border-right: 4px solid var(--secondary);
+    }
+
+    /* ====== قسم الإحصائيات ====== */
+    .stats-section {
+      background: var(--bg);
+      padding: 60px 20px;
+    }
+    .stats-container {
+      max-width: 1200px; 
+      margin: 0 auto; 
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      padding: 30px 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+    }
+    .stat-card:hover { 
+      transform: translateY(-8px); 
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    .stat-card h3 { 
+      font-size: 2.8rem; 
+      color: var(--primary); 
+      margin: 0 0 8px; 
+      font-weight: 800;
+    }
+    .stat-card p { 
+      margin: 0; 
+      font-weight: 700; 
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+
+    /* ====== الأقسام العامة ====== */
+    section.content-section { 
+      padding: 80px 20px; 
+    }
+    .section-inner { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+    }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-title h3 {
+      margin: 0;
+      color: var(--primary);
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+    .section-title::before {
+      content: '';
+      width: 8px;
+      height: 35px;
+      background: var(--secondary);
+      border-radius: 4px;
+    }
+
+    /* ====== قسم الأخبار المحسّن ====== */
+    .news-section { 
+      padding: 80px 20px; 
+      background: var(--bg); 
+    }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+    }
+    .news-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border: 1px solid var(--border);
+    }
+    .news-card:hover { 
+      transform: translateY(-10px); 
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    .news-card img { 
+      width: 100%; 
+      height: 220px; 
+      object-fit: cover; 
+      display: block; 
+    }
+    .news-card .news-body { 
+      padding: 24px; 
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .news-card h3 { 
+      margin: 0 0 12px; 
+      font-size: 1.25rem; 
+      color: var(--text);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .news-card p { 
+      color: var(--text-light); 
+      margin: 0 0 20px; 
+      font-size: 1rem; 
+      flex: 1;
+    }
+    .news-card .card-footer { 
+      padding: 0 24px 24px; 
+      text-align: center; 
+    }
+
+    /* ====== أقسام الخدمات والاستشارات ====== */
+    .services-grid, .consulting-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    
+    .service-card, .consulting-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 30px 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border);
+      text-align: center;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .service-card::before, .consulting-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+    }
+    .service-card:hover, .consulting-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    .service-card h4, .consulting-card h5 {
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+    .service-card p, .consulting-card p {
+      color: var(--text-light);
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .service-card .btn-service, .consulting-card .btn-consult {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: all 0.3s;
+      margin-top: auto;
+    }
+    .service-card .btn-service:hover, .consulting-card .btn-consult:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ====== قسم الفعاليات ====== */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+    }
+
+    /* ====== قسم الدليل ====== */
+    .directory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 24px;
+    }
+    .directory-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 30px 24px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border);
+      text-align: center;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .directory-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+    }
+    .directory-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    .directory-card h5 {
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+    .directory-card p {
+      color: var(--text-light);
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .directory-card .btn-directory {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: all 0.3s;
+      margin-top: auto;
+    }
+    .directory-card .btn-directory:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ====== قسم فريق العمل ====== */
+    .team-section {
+      background: var(--bg);
+      padding: 80px 20px;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+    .team-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .team-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    .team-img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+    .team-info {
+      padding: 24px;
+    }
+    .team-name {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .team-role {
+      color: var(--secondary);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .team-bio {
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    /* ====== قسم التواصل ====== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    /* ====== الفوتر المحسّن ====== */
+    footer {
+      background: var(--primary-dark);
+      color: #d7e6ff;
+      padding: 50px 20px 30px;
+      border-top: 6px solid var(--secondary);
+    }
+    .footer-inner { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+    }
+    .footer-col { }
+    .footer-col h4 { 
+      color: #fff; 
+      margin-bottom: 20px; 
+      font-size: 1.3rem;
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 12px;
+    }
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--secondary);
+    }
+    .footer-links a { 
+      display: block; 
+      color: #cfe3ff; 
+      text-decoration: none; 
+      margin: 10px 0;
+      transition: all 0.2s;
+      padding: 6px 0;
+    }
+    .footer-links a:hover { 
+      color: #fff; 
+      transform: translateX(-5px);
+    }
+    .socials { 
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .socials a { 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      color: #cfe3ff;
+      border-radius: 50%;
+      text-decoration: none;
+      transition: all 0.3s;
+      font-size: 1.1rem;
+    }
+    .socials a:hover { 
+      transform: translateY(-5px); 
+      color: #fff; 
+      background: var(--secondary);
+    }
+
+    .copyright { 
+      text-align: center; 
+      color: #acc7ff; 
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* ====== نافذة المستشار المنبثقة ====== */
+    .consultant-modal .modal-content,
+    .service-modal .modal-content,
+    .directory-modal .modal-content,
+    .news-modal .modal-content {
+      border-radius: 20px;
+      overflow: hidden;
+      border: none;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    }
+    .consultant-modal .modal-header,
+    .service-modal .modal-header,
+    .directory-modal .modal-header,
+    .news-modal .modal-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border-bottom: none;
+      padding: 25px 30px;
+    }
+    .consultant-modal .modal-body,
+    .service-modal .modal-body,
+    .directory-modal .modal-body,
+    .news-modal .modal-body {
+      padding: 30px;
+    }
+    .consultant-info {
+      display: flex;
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    .consultant-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid var(--accent);
+      flex-shrink: 0;
+    }
+    .consultant-details {
+      flex: 1;
+    }
+    .consultant-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+    .consultant-title {
+      color: var(--secondary);
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+    .consultant-bio {
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+    .contact-form .form-group {
+      margin-bottom: 20px;
+    }
+    .contact-form label {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .contact-form .form-control {
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .contact-form .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 58, 95, 0.1);
+    }
+    .contact-form textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .btn-send {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    .btn-send:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ====== جداول البيانات ====== */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .data-table th {
+      background: var(--primary);
+      color: white;
+      padding: 12px 15px;
+      text-align: right;
+      font-weight: 600;
+    }
+    .data-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table tr:nth-child(even) {
+      background: var(--accent);
+    }
+    .data-table tr:hover {
+      background: rgba(26, 58, 95, 0.1);
+    }
+
+    /* ====== لوحة الإدارة ====== */
+    .admin-panel {
+      display: none;
+      padding: 20px;
+      background: var(--bg);
+      min-height: 100vh;
+    }
+    .admin-header {
+      background: var(--primary);
+      color: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+    .admin-tab {
+      padding: 10px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .admin-tab.active {
+      background: var(--primary);
+      color: white;
+    }
+    .admin-content {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    .admin-section {
+      display: none;
+    }
+    .admin-section.active {
+      display: block;
+    }
+    .consultation-price {
+      font-weight: bold;
+      color: var(--secondary);
+      margin: 10px 0;
+    }
+
+    /* ====== نماذج المصادقة ====== */
+    .auth-form {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 30px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    .form-tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .form-tab.active {
+      border-bottom: 2px solid var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .form-section {
+      display: none;
+    }
+    .form-section.active {
+      display: block;
+    }
+    .forgot-password {
+      text-align: left;
+      margin-top: 10px;
+    }
+
+    /* ====== تحسينات التجاوب ====== */
+    @media (max-width: 992px) {
+      .consultant-info {
+        flex-direction: column;
+        text-align: center;
+      }
+      .consultant-img {
+        align-self: center;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .about-overlay {
+        padding: 30px 20px;
+      }
+      .about-overlay h2 {
+        font-size: 1.8rem;
+      }
+      .section-title h3 {
+        font-size: 1.5rem;
+      }
+      .news-grid, .services-grid, .consulting-grid, .team-grid {
+        grid-template-columns: 1fr;
+      }
+      .stats-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+      .logo-text {
+        font-size: 1.3rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .about-section {
+        height: 70vh;
+      }
+      .stat-card h3 {
+        font-size: 2.2rem;
+      }
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ====== إضافات جديدة ====== */
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .status-completed {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+    .status-in-progress {
+      background: #d4edda;
+      color: #155724;
+    }
+    .consultant-stats {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .stat-badge {
+      background: var(--accent);
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- طبقة التعتيم -->
+  <div id="overlay" class="overlay" aria-hidden="true"></div>
+
+  <!-- الهيدر مع الشعار -->
+  <header>
+    <div class="logo-container">
+      <!-- ضع رابط الشعار الخاص بك هنا -->
+      <img src="image/logo.jpg" alt="شعار PRconnect" class="logo" id="siteLogo">
+      <h1 class="logo-text">PRconnect</h1>
+    </div>
+    <div class="header-icons">
+      <button id="btnSearch" aria-label="بحث"><i class="fa-solid fa-search"></i></button>
+      <button id="btnMenu" aria-label="قائمة"><i class="fa-solid fa-bars"></i></button>
+      <button id="btnUser" aria-label="حساب المستخدم" style="display: none;"><i class="fa-solid fa-user"></i></button>
+      <button id="btnLogout" aria-label="تسجيل الخروج" style="display: none;"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+
+    <!-- شريط البحث -->
+    <div class="search-container" aria-hidden="true">
+      <div id="searchBox" class="search-box hidden" role="search">
+        <input id="searchInput" type="text" placeholder="ابحث هنا..." aria-label="حقل البحث">
+        <button class="btn-search btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> بحث</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- الشريط الجانبي -->
+  <aside id="sidebar" aria-label="شريط جانبي">
+    <div class="brand"><i class="fa-solid fa-network-wired"></i> <span>PRconnect</span></div>
+
+    <ul>
+      <li><a class="main-link" href="#about-section"><span class="icon"><i class="fa-solid fa-circle-info"></i></span> <span>عن الموقع</span></a></li>
+
+      <li><a class="main-link" href="#news-section"><span class="icon"><i class="fa-solid fa-newspaper"></i></span> <span>الأخبار</span></a></li>
+
+      <li>
+        <a class="main-link link-toggle" href="#services-section"><span class="icon"><i class="fa-solid fa-briefcase"></i></span> <span>الخدمات</span> <span style="margin-inline-start:auto"><i class="fa-solid fa-chevron-left"></i></span></a>
+        <div class="sublist">
+          <a href="#services-scholars">المنح الدراسية</a>
+          <a href="#services-universities">دليل الجامعات والمعاهد</a>
+          <a href="#services-postgrad">دراسات عليا</a>
+          <a href="#services-agencies">وكالات العلاقات العامة</a>
+          <a href="#services-courses">دورات تدريبية</a>
+        </div>
+      </li>
+
+      <li>
+        <a class="main-link link-toggle" href="#consulting-section"><span class="icon"><i class="fa-solid fa-lightbulb"></i></span> <span>الإستشارات</span> <span style="margin-inline-start:auto"><i class="fa-solid fa-chevron-left"></i></span></a>
+        <div class="sublist">
+          <a href="#consulting-ceremonies">التشريفات والمراسم</a>
+          <a href="#consulting-crisis">إدارة الأزمات</a>
+          <a href="#consulting-reputation">السمعة والصورة الذهنية</a>
+          <a href="#consulting-academic">استشارات أكاديمية</a>
+          <a href="#consulting-social">المسؤولية المجتمعية</a>
+          <a href="#consulting-media">استشارات إعلامية</a>
+        </div>
+      </li>
+
+      <li><a class="main-link" href="#events-section"><span class="icon"><i class="fa-solid fa-calendar-days"></i></span> <span>مؤتمرات وفعاليات</span></a></li>
+
+      <li>
+        <a class="main-link link-toggle" href="#directory-section"><span class="icon"><i class="fa-solid fa-list"></i></span> <span>الدليل</span> <span style="margin-inline-start:auto"><i class="fa-solid fa-chevron-left"></i></span></a>
+        <div class="sublist">
+          <a href="#directory-pr">شركات العلاقات العامة</a>
+          <a href="#directory-events">شركات تنظيم فعاليات</a>
+          <a href="#directory-social">شركات سوشيال ميديا</a>
+          <a href="#directory-print">شركات الطباعة</a>
+        </div>
+      </li>
+
+      <li><a class="main-link" href="#team-section"><span class="icon"><i class="fa-solid fa-users"></i></span> <span>فريق العمل</span></a></li>
+
+      <li><a class="main-link" href="#partners-section"><span class="icon"><i class="fa-solid fa-handshake"></i></span> <span>الشركاء</span></a></li>
+      <li><a class="main-link" href="#contact-section"><span class="icon"><i class="fa-solid fa-envelope"></i></span> <span>تواصل معنا</span></a></li>
+
+      <hr style="border-top:1px dashed rgba(255,255,255,0.2)">
+
+      <li><a class="main-link" href="#" id="sidebarLogin"><span class="icon"><i class="fa-solid fa-user"></i></span> <span>دخول / تسجيل</span></a></li>
+      <li id="sidebarAdmin" style="display: none;"><a class="main-link" href="#" id="sidebarAdminLink"><span class="icon"><i class="fa-solid fa-gear"></i></span> <span>لوحة الإدارة</span></a></li>
+      <li id="sidebarLogout" style="display: none;"><a class="main-link" href="#" id="sidebarLogoutLink"><span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span> <span>تسجيل الخروج</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- المحتوى الرئيسي -->
+  <main id="mainContent">
+
+    <!-- قسم المقدمة -->
+    <section id="about-section" class="about-section" aria-labelledby="about-title">
+      <div class="about-overlay">
+        <h2 id="about-title">PRconnect - شبكة العلاقات العامة الرائدة</h2>
+        <p>منصة <strong>PRconnect</strong> توفر حلولاً متكاملة في مجال العلاقات العامة، تجمع بين الخبرات المحلية والعالمية لتقديم استشارات متخصصة وموارد شاملة تدعم المؤسسات والأفراد في بناء سمعة احترافية مستدامة.</p>
+        <div style="margin-top:24px;">
+          <button id="showDetailsBtn" class="btn btn-primary">عرض التفاصيل</button>
+        </div>
+        <div id="aboutDetails" class="about-details" style="margin-top:24px;">
+          <p>نعمل في PRconnect على جمع أفضل الخبرات والممارسات العالمية في مجال العلاقات العامة، نقدم محتوى تدريبي واستشارات موجهة للمؤسسات الحكومية والقطاع الخاص. المنصة تمكنك من الوصول إلى دورات متخصصة، وكالات معتمدة، مقالات توجيهية، بالإضافة إلى أدوات متقدمة لإدارة السمعة والفعاليات.</p>
+          <p>فريقنا من الخبراء والمستشارين المعتمدين يعمل على تقديم حلول مبتكرة تلبي احتياجات عملائنا في مختلف القطاعات، مع التركيز على تحقيق أقصى استفادة من استراتيجيات الاتصال الحديثة.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم الإحصائيات -->
+    <section class="stats-section" aria-label="إحصائيات">
+      <div class="stats-container">
+        <div class="stat-card" aria-hidden="false">
+          <h3 id="associationsCount">0</h3>
+          <p>الجمعيات المسجلة</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="membersCount">0</h3>
+          <p>الأعضاء المنضمون</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="eventsCount">0</h3>
+          <p>الفعاليات المنظمة</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="consultationsCount">0</h3>
+          <p>جلسات استشارية</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم الأخبار -->
+    <section id="news-section" class="news-section content-section" aria-labelledby="news-title">
+      <div class="section-inner">
+        <div class="section-title">
+          <h3 id="news-title">آخر الأخبار</h3>
+        </div>
+
+        <div class="news-grid" id="newsGrid">
+          <!-- سيتم ملؤها ديناميكياً -->
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم الخدمات -->
+    <section id="services-section" class="content-section" aria-labelledby="services-title">
+      <div class="section-inner">
+        <div class="section-title"><h3 id="services-title">الخدمات</h3></div>
+
+        <div class="services-grid" id="servicesGrid">
+          <!-- سيتم ملؤها ديناميكياً -->
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم الاستشارات -->
+    <section id="consulting-section" class="content-section" aria-labelledby="consulting-title">
+      <div class="section-inner">
+        <div class="section-title"><h3 id="consulting-title">الإستشارات</h3></div>
+
+        <div class="consulting-grid" id="consultingGrid">
+          <!-- سيتم ملؤها ديناميكياً -->
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم الفعاليات -->
+    <section id="events-section" class="content-section" aria-labelledby="events-title">
+      <div class="section-inner">
+        <div class="section-title"><h3 id="events-title">مؤتمرات وفعاليات</h3></div>
+
+        <div class="events-grid" id="eventsGrid">
+          <!-- سيتم ملؤها ديناميكياً -->
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم الدليل -->
+    <section id="directory-section" class="content-section" aria-labelledby="directory-title">
+      <div class="section-inner">
+        <div class="section-title"><h3 id="directory-title">الدليل</h3></div>
+
+        <div class="directory-grid" id="directoryGrid">
+          <!-- سيتم ملؤها ديناميكياً -->
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم فريق العمل -->
+    <section id="team-section" class="team-section content-section" aria-labelledby="team-title">
+      <div class="section-inner">
+        <div class="section-title"><h3 id="team-title">فريق العمل</h3></div>
+        <div class="team-grid" id="teamGrid">
+          <!-- سيتم ملؤها ديناميكياً -->
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم الشركاء -->
+    <section id="partners-section" class="content-section" aria-labelledby="partners-title">
+      <div class="section-inner">
+        <div class="section-title"><h3 id="partners-title">الشركاء</h3></div>
+        <div class="partners-grid" id="partnersGrid">
+          <!-- سيتم ملؤها ديناميكياً -->
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم التواصل -->
+    <section id="contact-section" class="content-section" aria-labelledby="contact-title">
+      <div class="section-inner">
+        <div class="section-title"><h3 id="contact-title">تواصل معنا</h3></div>
+        <div class="contact-grid">
+          <div class="service-card">
+            <h5>راسلنا</h5>
+            <p>البريد: contact@prconnect.example</p>
+            <p>الهاتف: +213 700 000 000</p>
+            <p>الفاكس: +213 700 000 001</p>
+          </div>
+          <div class="service-card">
+            <h5>موقعنا</h5>
+            <p>العنوان: شارع النموذج، المدينة</p>
+            <p>الرمز البريدي: 12345</p>
+            <p>ساعات العمل: 8 ص - 4 م</p>
+          </div>
+          <div class="service-card">
+            <h5>تابعنا</h5>
+            <div class="socials">
+              <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+              <a href="#" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+              <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- لوحة الإدارة -->
+  <div id="adminPanel" class="admin-panel">
+    <div class="admin-header">
+      <h2>لوحة إدارة PRconnect</h2>
+      <button id="backToSite" class="btn btn-light">العودة للموقع</button>
+    </div>
+
+    <div class="admin-tabs">
+      <div class="admin-tab active" data-tab="users">المستخدمين</div>
+      <div class="admin-tab" data-tab="consultants">المستشارين</div>
+      <div class="admin-tab" data-tab="consultations">الاستشارات</div>
+      <div class="admin-tab" data-tab="news">الأخبار</div>
+      <div class="admin-tab" data-tab="services">الخدمات</div>
+      <div class="admin-tab" data-tab="directory">الدليل</div>
+    </div>
+
+    <div class="admin-content">
+      <!-- قسم إدارة المستخدمين -->
+      <div id="adminUsers" class="admin-section active">
+        <h3>إدارة المستخدمين</h3>
+        <div class="mb-3">
+          <button class="btn btn-info btn-sm" onclick="debugUsers()">
+            <i class="fa-solid fa-bug"></i> فحص البيانات
+          </button>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>البريد الإلكتروني</th>
+              <th>تاريخ التسجيل</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="usersTable">
+            <!-- سيتم ملؤها ديناميكياً -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- قسم إدارة المستشارين -->
+      <div id="adminConsultants" class="admin-section">
+        <h3>إدارة المستشارين</h3>
+        <button id="addConsultantBtn" class="btn btn-primary mb-3">إضافة مستشار جديد</button>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>الصورة</th>
+              <th>الاسم</th>
+              <th>التخصص</th>
+              <th>السعر</th>
+              <th>الإحصائيات</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="consultantsTable">
+            <!-- سيتم ملؤها ديناميكياً -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- قسم إدارة الاستشارات -->
+      <div id="adminConsultations" class="admin-section">
+        <h3>إدارة الاستشارات</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>اسم المستخدم</th>
+              <th>البريد الإلكتروني</th>
+              <th>نوع الاستشارة</th>
+              <th>السعر</th>
+              <th>الحالة</th>
+              <th>التاريخ</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="consultationsTable">
+            <!-- سيتم ملؤها ديناميكياً -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- قسم إدارة الأخبار -->
+      <div id="adminNews" class="admin-section">
+        <h3>إدارة الأخبار</h3>
+        <button id="addNewsBtn" class="btn btn-primary mb-3">إضافة خبر جديد</button>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>العنوان</th>
+              <th>التاريخ</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="newsTable">
+            <!-- سيتم ملؤها ديناميكياً -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- قسم إدارة الخدمات -->
+      <div id="adminServices" class="admin-section">
+        <h3>إدارة الخدمات</h3>
+        <button id="addServiceBtn" class="btn btn-primary mb-3">إضافة خدمة جديدة</button>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>اسم الخدمة</th>
+              <th>التصنيف</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="servicesTable">
+            <!-- سيتم ملؤها ديناميكياً -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- قسم إدارة الدليل -->
+      <div id="adminDirectory" class="admin-section">
+        <h3>إدارة الدليل</h3>
+        <button id="addDirectoryBtn" class="btn btn-primary mb-3">إضافة عنصر جديد</button>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>اسم العنصر</th>
+              <th>التصنيف</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="directoryTable">
+            <!-- سيتم ملؤها ديناميكياً -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- الفوتر -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-col">
+        <h4>روابط سريعة</h4>
+        <div class="footer-links">
+          <a href="#about-section">عن الموقع</a>
+          <a href="#news-section">الأخبار</a>
+          <a href="#services-section">الخدمات</a>
+          <a href="#consulting-section">الاستشارات</a>
+          <a href="#team-section">فريق العمل</a>
+          <a href="#contact-section">تواصل معنا</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>تواصل اجتماعي</h4>
+        <div class="socials" aria-label="روابط التواصل الاجتماعي">
+          <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>حول PRconnect</h4>
+        <p style="color:#dbeaff; max-width:320px;">منصة متكاملة لدعم الخبراء والمؤسسات في مجال العلاقات العامة — موارد، استشارات، وأدوات متقدمة لإدارة السمعة والفعاليات والاتصال المؤسسي.</p>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2025 PRconnect — جميع الحقوق محفوظة
+    </div>
+  </footer>
+
+  <!-- جميع النوافذ المنبثقة -->
+
+  <!-- نافذة المصادقة -->
+  <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="authModalLabel">تسجيل الدخول / إنشاء حساب</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-tabs">
+            <div class="form-tab active" data-form="login">تسجيل الدخول</div>
+            <div class="form-tab" data-form="signup">إنشاء حساب</div>
+          </div>
+
+          <!-- نموذج تسجيل الدخول -->
+          <div id="loginForm" class="form-section active">
+            <form id="loginFormElement">
+              <div class="mb-3">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input type="email" class="form-control" id="loginEmail" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">كلمة المرور</label>
+                <input type="password" class="form-control" id="loginPassword" required>
+              </div>
+              <div class="forgot-password">
+                <a href="#" id="forgotPasswordLink">نسيت كلمة المرور؟</a>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 mb-2">تسجيل الدخول</button>
+            </form>
+          </div>
+
+          <!-- نموذج إنشاء حساب -->
+          <div id="signupForm" class="form-section">
+            <form id="signupFormElement">
+              <div class="mb-3">
+                <label class="form-label">الاسم</label>
+                <input type="text" class="form-control" id="signupName" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">اللقب</label>
+                <input type="text" class="form-control" id="signupLastName" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input type="email" class="form-control" id="signupEmail" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">كلمة المرور</label>
+                <input type="password" class="form-control" id="signupPassword" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">تأكيد كلمة المرور</label>
+                <input type="password" class="form-control" id="signupConfirmPassword" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 mb-2">إنشاء حساب</button>
+            </form>
+          </div>
+
+          <!-- نموذج استعادة كلمة المرور -->
+          <div id="forgotPasswordForm" class="form-section">
+            <form id="forgotPasswordFormElement">
+              <div class="mb-3">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input type="email" class="form-control" id="resetEmail" required>
+              </div>
+              <p class="text-muted">سيتم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني.</p>
+              <button type="submit" class="btn btn-primary w-100 mb-2">إرسال رابط الاستعادة</button>
+              <button type="button" class="btn btn-outline-secondary w-100" id="backToLogin">العودة لتسجيل الدخول</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة المستشار -->
+  <div class="modal fade consultant-modal" id="consultantModal" tabindex="-1" aria-labelledby="consultantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="consultantModalLabel">استشارة مع خبير</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body">
+          <div class="consultant-info">
+            <img src="" alt="صورة المستشار" class="consultant-img" id="consultantImg">
+            <div class="consultant-details">
+              <h3 class="consultant-name" id="consultantName">اسم المستشار</h3>
+              <p class="consultant-title" id="consultantTitle">لقب المستشار</p>
+              <p class="consultant-bio" id="consultantBio">نبذة عن المستشار وخبراته في المجال.</p>
+              <div class="consultation-price" id="consultationPrice">السعر: 0 دج</div>
+              <div class="consultant-stats" id="consultantStats">
+                <!-- سيتم ملؤها ديناميكياً -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="contact-form">
+            <h5>طلب استشارة</h5>
+            <div id="consultationLoginRequired" style="display: none; background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+              <p>يجب <a href="#" id="loginForConsultation">تسجيل الدخول</a> لطلب استشارة.</p>
+            </div>
+            <form id="consultationForm" style="display: none;">
+              <div class="form-group">
+                <label for="clientName">الاسم الكامل</label>
+                <input type="text" class="form-control" id="clientName" required>
+              </div>
+              <div class="form-group">
+                <label for="clientEmail">البريد الإلكتروني</label>
+                <input type="email" class="form-control" id="clientEmail" required>
+              </div>
+              <div class="form-group">
+                <label for="clientPhone">رقم الهاتف</label>
+                <input type="tel" class="form-control" id="clientPhone">
+              </div>
+              <div class="form-group">
+                <label for="consultationTopic">موضوع الاستشارة</label>
+                <input type="text" class="form-control" id="consultationTopic" required>
+              </div>
+              <div class="form-group">
+                <label for="consultationDetails">تفاصيل الاستشارة</label>
+                <textarea class="form-control" id="consultationDetails" rows="4" required></textarea>
+              </div>
+              <button type="submit" class="btn-send">إرسال طلب الاستشارة</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة الخدمات -->
+  <div class="modal fade service-modal" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="serviceModalLabel">تفاصيل الخدمة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body" id="serviceModalBody">
+          <!-- سيتم ملؤه بواسطة JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة الدليل -->
+  <div class="modal fade directory-modal" id="directoryModal" tabindex="-1" aria-labelledby="directoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="directoryModalLabel">تفاصيل الدليل</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body" id="directoryModalBody">
+          <!-- سيتم ملؤه بواسطة JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة الأخبار -->
+  <div class="modal fade news-modal" id="newsModal" tabindex="-1" aria-labelledby="newsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newsModalLabel">تفاصيل الخبر</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body" id="newsModalBody">
+          <!-- سيتم ملؤه بواسطة JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة إضافة/تعديل الأخبار -->
+  <div class="modal fade" id="newsEditModal" tabindex="-1" aria-labelledby="newsEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newsEditModalLabel">إضافة/تعديل خبر</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body">
+          <form id="newsEditForm">
+            <input type="hidden" id="newsId">
+            <div class="mb-3">
+              <label class="form-label">عنوان الخبر</label>
+              <input type="text" class="form-control" id="newsTitle" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">صورة الخبر (png)</label>
+              <input type="url" class="form-control" id="newsImage">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">محتوى الخبر</label>
+              <textarea class="form-control" id="newsContent" rows="6" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">رابط إضافي (اختياري)</label>
+              <input type="url" class="form-control" id="newsLink">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">حفظ الخبر</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة إضافة/تعديل الخدمات -->
+  <div class="modal fade" id="serviceEditModal" tabindex="-1" aria-labelledby="serviceEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="serviceEditModalLabel">إضافة/تعديل خدمة</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body">
+          <form id="serviceEditForm">
+            <input type="hidden" id="serviceId">
+            <div class="mb-3">
+              <label class="form-label">عنوان الخدمة</label>
+              <input type="text" class="form-control" id="serviceTitle" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">وصف الخدمة</label>
+              <textarea class="form-control" id="serviceDescription" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">تفاصيل الخدمة</label>
+              <textarea class="form-control" id="serviceDetails" rows="6" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">حفظ الخدمة</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة إضافة/تعديل الدليل -->
+  <div class="modal fade" id="directoryEditModal" tabindex="-1" aria-labelledby="directoryEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="directoryEditModalLabel">إضافة/تعديل عنصر دليل</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body">
+          <form id="directoryEditForm">
+            <input type="hidden" id="directoryId">
+            <div class="mb-3">
+              <label class="form-label">عنوان العنصر</label>
+              <input type="text" class="form-control" id="directoryTitle" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">وصف العنصر</label>
+              <textarea class="form-control" id="directoryDescription" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">تفاصيل العنصر</label>
+              <textarea class="form-control" id="directoryDetails" rows="6" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">حفظ العنصر</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة إضافة/تعديل المستشارين -->
+  <div class="modal fade" id="consultantEditModal" tabindex="-1" aria-labelledby="consultantEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="consultantEditModalLabel">إضافة/تعديل مستشار</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+        </div>
+        <div class="modal-body">
+          <form id="consultantEditForm">
+            <input type="hidden" id="consultantId">
+            <div class="mb-3">
+              <label class="form-label">اسم المستشار</label>
+              <input type="text" class="form-control" id="consultantNameInput" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">التخصص/اللقب</label>
+              <input type="text" class="form-control" id="consultantTitleInput" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">نبذة عن المستشار</label>
+              <textarea class="form-control" id="consultantBioInput" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">صورة المستشار (رابط)</label>
+              <input type="url" class="form-control" id="consultantImageInput" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">سعر الاستشارة (دج)</label>
+              <input type="number" class="form-control" id="consultantPriceInput" min="0" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">حفظ المستشار</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    // ====== إعدادات الموقع القابلة للتخصيص ======
+    
+    // رابط الشعار - ضع رابط الشعار الخاص بك هنا
+    const SITE_LOGO = "LOGO_URL_HERE"; // استبدل LOGO_URL_HERE برابط الشعار الخاص بك
+    
+    // قائمة بريدات المسؤولين
+    const ADMIN_EMAILS = [
+      'addadifatima91@gmail.com',
+    ];
+
+    // تهيئة Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCMmXpLLCa5Xz1DjKspIhhVD8Nd0IvHaww",
+      authDomain: "prconnect-aecdb.firebaseapp.com",
+      projectId: "prconnect-aecdb",
+      storageBucket: "prconnect-aecdb.firebasestorage.app",
+      messagingSenderId: "274486667745",
+      appId: "1:274486667745:web:d2f59ccb7a634ebbaf8aa0",
+      measurementId: "G-6X40B3975X"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // ====== متغيرات عامة ======
+    let currentUser = null;
+    let isAdmin = false;
+
+    // ====== إعداد الشعار ======
+    function setupLogo() {
+      const siteLogo = document.getElementById('siteLogo');
+      if (siteLogo && SITE_LOGO && SITE_LOGO !== "LOGO_URL_HERE") {
+        siteLogo.src = SITE_LOGO;
+      } else {
+        // استخدام شعار افتراضي إذا لم يتم تحديد شعار
+        siteLogo.src = "https://via.placeholder.com/150x50/1a3a5f/ffffff?text=PRconnect";
+      }
+    }
+
+    // ====== التحكم في الشريط الجانبي ======
+    const btnMenu = document.getElementById('btnMenu');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    function openSidebar(){ 
+      sidebar.classList.add('active'); 
+      overlay.classList.add('visible'); 
+      overlay.style.opacity='1'; 
+    }
+    
+    function closeSidebar(){ 
+      sidebar.classList.remove('active'); 
+      overlay.classList.remove('visible'); 
+      overlay.style.opacity='0'; 
+    }
+
+    btnMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(sidebar.classList.contains('active')) closeSidebar(); 
+      else openSidebar();
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+
+    // إغلاق الشريط الجانبي عند النقر على رابط
+    sidebar.querySelectorAll('a').forEach(a=>{
+      a.addEventListener('click', (ev) => {
+        const href = a.getAttribute('href') || '';
+        if(href.startsWith('#')) {
+          closeSidebar();
+        }
+      });
+    });
+
+    // ====== التحكم في القوائم الفرعية ======
+    document.querySelectorAll('#sidebar .link-toggle').forEach(toggle=>{
+      toggle.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const li = toggle.parentElement;
+        li.classList.toggle('open');
+      });
+    });
+
+    // ====== التحكم في شريط البحث ======
+    const btnSearch = document.getElementById('btnSearch');
+    const searchBox = document.getElementById('searchBox');
+
+    btnSearch.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const isVisible = searchBox.classList.contains('visible');
+      closeSidebar();
+      if(isVisible) {
+        searchBox.classList.remove('visible');
+        searchBox.classList.add('hidden');
+      } else {
+        searchBox.classList.remove('hidden');
+        searchBox.classList.add('visible');
+        document.getElementById('searchInput').focus();
+      }
+    });
+
+    // إغلاق البحث عند النقر خارجه
+    document.addEventListener('click', (e)=>{
+      if(!searchBox.contains(e.target) && e.target !== btnSearch){
+        searchBox.classList.remove('visible');
+        searchBox.classList.add('hidden');
+      }
+    });
+
+    // ====== التحكم في تفاصيل القسم ======
+    const showDetailsBtn = document.getElementById('showDetailsBtn');
+    const aboutDetails = document.getElementById('aboutDetails');
+    showDetailsBtn.addEventListener('click', ()=>{
+      const shown = getComputedStyle(aboutDetails).display !== 'none';
+      if(shown){
+        aboutDetails.style.display = 'none';
+        showDetailsBtn.textContent = 'عرض التفاصيل';
+      } else {
+        aboutDetails.style.display = 'block';
+        showDetailsBtn.textContent = 'إخفاء التفاصيل';
+      }
+    });
+
+    // ====== عداد الإحصائيات ======
+    let associations = 0, members = 0, events = 0, consultations = 0;
+    const targetAssociations = 132, targetMembers = 642, targetEvents = 56, targetConsultations = 289;
+    const elAssociations = document.getElementById('associationsCount');
+    const elMembers = document.getElementById('membersCount');
+    const elEvents = document.getElementById('eventsCount');
+    const elConsultations = document.getElementById('consultationsCount');
+
+    function animateCounters(){
+      if(associations < targetAssociations) associations += Math.ceil((targetAssociations - associations)/8);
+      if(members < targetMembers) members += Math.ceil((targetMembers - members)/8);
+      if(events < targetEvents) events += Math.ceil((targetEvents - events)/8);
+      if(consultations < targetConsultations) consultations += Math.ceil((targetConsultations - consultations)/8);
+
+      elAssociations.textContent = associations;
+      elMembers.textContent = members;
+      elEvents.textContent = events;
+      elConsultations.textContent = consultations;
+
+      if(associations < targetAssociations || members < targetMembers || events < targetEvents || consultations < targetConsultations){
+        requestAnimationFrame(animateCounters);
+      } else {
+        elAssociations.textContent = targetAssociations;
+        elMembers.textContent = targetMembers;
+        elEvents.textContent = targetEvents;
+        elConsultations.textContent = targetConsultations;
+      }
+    }
+    
+    // بدء العدادات عند تحميل الصفحة
+    window.addEventListener('load', ()=> setTimeout(animateCounters, 500) );
+
+    // ====== إدارة المصادقة ======
+    const authModal = new bootstrap.Modal(document.getElementById('authModal'));
+    const consultantModal = new bootstrap.Modal(document.getElementById('consultantModal'));
+    const serviceModal = new bootstrap.Modal(document.getElementById('serviceModal'));
+    const directoryModal = new bootstrap.Modal(document.getElementById('directoryModal'));
+    const newsModal = new bootstrap.Modal(document.getElementById('newsModal'));
+    const newsEditModal = new bootstrap.Modal(document.getElementById('newsEditModal'));
+    const serviceEditModal = new bootstrap.Modal(document.getElementById('serviceEditModal'));
+    const directoryEditModal = new bootstrap.Modal(document.getElementById('directoryEditModal'));
+    const consultantEditModal = new bootstrap.Modal(document.getElementById('consultantEditModal'));
+
+    // فتح نافذة المصادقة
+    document.getElementById('sidebarLogin').addEventListener('click', (e) => {
+      e.preventDefault();
+      closeSidebar();
+      showAuthForm('login');
+      authModal.show();
+    });
+
+    document.getElementById('btnUser').addEventListener('click', (e) => {
+      e.preventDefault();
+      showAuthForm('login');
+      authModal.show();
+    });
+
+    // التبديل بين نماذج المصادقة
+    document.querySelectorAll('.form-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const formType = tab.getAttribute('data-form');
+        showAuthForm(formType);
+      });
+    });
+
+    function showAuthForm(formType) {
+      // إخفاء جميع النماذج
+      document.querySelectorAll('.form-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // إزالة النشاط من جميع الألسنة
+      document.querySelectorAll('.form-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // إظهار النموذج المطلوب
+      document.getElementById(`${formType}Form`).classList.add('active');
+      document.querySelector(`.form-tab[data-form="${formType}"]`).classList.add('active');
+    }
+
+    // استعادة كلمة المرور
+    document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      showAuthForm('forgotPassword');
+    });
+
+    document.getElementById('backToLogin').addEventListener('click', (e) => {
+      e.preventDefault();
+      showAuthForm('login');
+    });
+
+    // تسجيل الدخول
+    document.getElementById('loginFormElement').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // تم تسجيل الدخول بنجاح
+          currentUser = userCredential.user;
+          checkIfAdmin();
+          authModal.hide();
+          updateUI();
+        })
+        .catch((error) => {
+          alert('خطأ في تسجيل الدخول: ' + error.message);
+        });
+    });
+
+    // إنشاء حساب
+    document.getElementById('signupFormElement').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('signupName').value;
+      const lastName = document.getElementById('signupLastName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('signupConfirmPassword').value;
+      
+      if (password !== confirmPassword) {
+        alert('كلمات المرور غير متطابقة');
+        return;
+      }
+      
+      try {
+        // إنشاء المستخدم في Authentication
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        currentUser = userCredential.user;
+        
+        console.log('تم إنشاء المستخدم في Authentication:', currentUser.uid);
+        
+        // حفظ بيانات المستخدم في Firestore
+        const userData = {
+          name: name,
+          lastName: lastName,
+          email: email,
+          isAdmin: ADMIN_EMAILS.includes(email),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          uid: currentUser.uid // إضافة حقل uid للمطابقة
+        };
+        
+        await db.collection('users').doc(currentUser.uid).set(userData);
+        console.log('تم حفظ بيانات المستخدم في Firestore');
+        
+        // تحديث الواجهة
+        checkIfAdmin();
+        authModal.hide();
+        updateUI();
+        
+        alert('تم إنشاء الحساب بنجاح!');
+        
+      } catch (error) {
+        console.error('خطأ في إنشاء الحساب:', error);
+        
+        if (error.code === 'auth/email-already-in-use') {
+          alert('هذا البريد الإلكتروني مسجل مسبقاً');
+        } else {
+          alert('خطأ في إنشاء الحساب: ' + error.message);
+        }
+      }
+    });
+
+    // استعادة كلمة المرور
+    document.getElementById('forgotPasswordFormElement').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('resetEmail').value;
+      
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          alert('تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني');
+          showAuthForm('login');
+        })
+        .catch((error) => {
+          alert('خطأ في إرسال رابط الاستعادة: ' + error.message);
+        });
+    });
+
+    // تسجيل الخروج
+    document.getElementById('btnLogout').addEventListener('click', logout);
+    document.getElementById('sidebarLogoutLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      closeSidebar();
+      logout();
+    });
+
+    function logout() {
+      auth.signOut().then(() => {
+        currentUser = null;
+        isAdmin = false;
+        updateUI();
+      });
+    }
+
+    // التحقق إذا كان المستخدم مسؤولاً
+    function checkIfAdmin() {
+      if (currentUser) {
+        // التحقق من البريد الإلكتروني أولاً
+        if (ADMIN_EMAILS.includes(currentUser.email)) {
+          isAdmin = true;
+          
+          // تحديث حقل isAdmin في قاعدة البيانات
+          db.collection('users').doc(currentUser.uid).update({
+            isAdmin: true
+          }).catch(error => {
+            console.error('Error updating admin status:', error);
+          });
+          
+          return;
+        }
+        
+        // إذا لم يكن البريد في القائمة، التحقق من حقل isAdmin في قاعدة البيانات
+        db.collection('users').doc(currentUser.uid).get()
+          .then(doc => {
+            if (doc.exists) {
+              const userData = doc.data();
+              isAdmin = userData.isAdmin || false;
+            } else {
+              isAdmin = false;
+            }
+          })
+          .catch(error => {
+            console.error('Error checking admin status:', error);
+            isAdmin = false;
+          });
+      } else {
+        isAdmin = false;
+      }
+    }
+
+    // تحديث واجهة المستخدم بناءً على حالة المصادقة
+    function updateUI() {
+      const btnUser = document.getElementById('btnUser');
+      const btnLogout = document.getElementById('btnLogout');
+      const sidebarLogin = document.getElementById('sidebarLogin');
+      const sidebarAdmin = document.getElementById('sidebarAdmin');
+      const sidebarLogout = document.getElementById('sidebarLogout');
+      
+      if (currentUser) {
+        // المستخدم مسجل الدخول
+        btnUser.style.display = 'flex';
+        btnLogout.style.display = 'flex';
+        sidebarLogin.style.display = 'none';
+        sidebarLogout.style.display = 'block';
+        
+        if (isAdmin) {
+          sidebarAdmin.style.display = 'block';
+        } else {
+          sidebarAdmin.style.display = 'none';
+        }
+      } else {
+        // المستخدم غير مسجل
+        btnUser.style.display = 'none';
+        btnLogout.style.display = 'none';
+        sidebarLogin.style.display = 'block';
+        sidebarAdmin.style.display = 'none';
+        sidebarLogout.style.display = 'none';
+      }
+    }
+
+    // ====== إدارة النوافذ المنبثقة ======
+
+    // نوافذ الخدمات
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('btn-service')) {
+        const serviceId = e.target.getAttribute('data-service');
+        
+        // الحصول على الخدمة من Firebase
+        db.collection('services').doc(serviceId).get()
+          .then(doc => {
+            if (doc.exists) {
+              const service = doc.data();
+              document.getElementById('serviceModalLabel').textContent = service.title;
+              document.getElementById('serviceModalBody').innerHTML = `
+                <h4>${service.title}</h4>
+                <p>${service.description}</p>
+                ${service.details}
+              `;
+              serviceModal.show();
+            }
+          })
+          .catch(error => {
+            console.error('Error loading service:', error);
+          });
+      }
+    });
+
+    // نوافذ الدليل
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('btn-directory')) {
+        const directoryId = e.target.getAttribute('data-directory');
+        
+        // الحصول على العنصر من Firebase
+        db.collection('directory').doc(directoryId).get()
+          .then(doc => {
+            if (doc.exists) {
+              const directory = doc.data();
+              document.getElementById('directoryModalLabel').textContent = directory.title;
+              document.getElementById('directoryModalBody').innerHTML = `
+                <h4>${directory.title}</h4>
+                <p>${directory.description}</p>
+                ${directory.details}
+              `;
+              directoryModal.show();
+            }
+          })
+          .catch(error => {
+            console.error('Error loading directory:', error);
+          });
+      }
+    });
+
+    // نوافذ الأخبار
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('btn-news')) {
+        const newsId = e.target.getAttribute('data-news');
+        
+        // الحصول على الخبر من Firebase
+        db.collection('news').doc(newsId).get()
+          .then(doc => {
+            if (doc.exists) {
+              const newsItem = doc.data();
+              document.getElementById('newsModalLabel').textContent = newsItem.title;
+              document.getElementById('newsModalBody').innerHTML = `
+                <img src="${newsItem.image}" alt="${newsItem.title}" style="width:100%; height:auto; border-radius:12px; margin-bottom:20px;">
+                <div style="text-align: right;">
+                  ${newsItem.content}
+                </div>
+              `;
+              newsModal.show();
+            }
+          })
+          .catch(error => {
+            console.error('Error loading news:', error);
+          });
+      }
+    });
+
+    // ====== إدارة الاستشارات ======
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('btn-consult')) {
+        const consultantId = e.target.getAttribute('data-consultant');
+        
+        // الحصول على بيانات المستشار من Firebase
+        db.collection('consultants').doc(consultantId).get()
+          .then(doc => {
+            if (doc.exists) {
+              const consultant = doc.data();
+              
+              document.getElementById('consultantName').textContent = consultant.name;
+              document.getElementById('consultantTitle').textContent = consultant.title;
+              document.getElementById('consultantBio').textContent = consultant.bio;
+              document.getElementById('consultantImg').src = consultant.img;
+              document.getElementById('consultantImg').alt = consultant.name;
+              document.getElementById('consultationPrice').textContent = `السعر: ${consultant.price} دج`;
+              
+              // حساب إحصائيات المستشار
+              calculateConsultantStats(consultantId).then(stats => {
+                const statsHTML = `
+                  <div class="stat-badge">إجمالي الاستشارات: ${stats.total}</div>
+                  <div class="stat-badge">المكتملة: ${stats.completed}</div>
+                  <div class="stat-badge">قيد الانتظار: ${stats.pending}</div>
+                `;
+                document.getElementById('consultantStats').innerHTML = statsHTML;
+              });
+              
+              // تحديد نوع الاستشارة في النموذج
+              document.getElementById('consultationTopic').value = consultant.title;
+              
+              consultantModal.show();
+              
+              // التحقق إذا كان المستخدم مسجلاً
+              if (currentUser) {
+                document.getElementById('consultationLoginRequired').style.display = 'none';
+                document.getElementById('consultationForm').style.display = 'block';
+                
+                // تعبئة بيانات المستخدم
+                db.collection('users').doc(currentUser.uid).get()
+                  .then(doc => {
+                    if (doc.exists) {
+                      const userData = doc.data();
+                      document.getElementById('clientName').value = `${userData.name} ${userData.lastName}`;
+                      document.getElementById('clientEmail').value = currentUser.email;
+                    }
+                  });
+              } else {
+                document.getElementById('consultationLoginRequired').style.display = 'block';
+                document.getElementById('consultationForm').style.display = 'none';
+              }
+            }
+          })
+          .catch(error => {
+            console.error('Error loading consultant:', error);
+          });
+      }
+    });
+
+    // حساب إحصائيات المستشار
+    async function calculateConsultantStats(consultantId) {
+      try {
+        const consultant = await db.collection('consultants').doc(consultantId).get();
+        if (!consultant.exists) return { total: 0, completed: 0, pending: 0 };
+        
+        const consultantName = consultant.data().name;
+        
+        // استعلام عن استشارات هذا المستشار
+        const consultationsSnapshot = await db.collection('consultations')
+          .where('consultationType', '==', consultantName)
+          .get();
+        
+        let total = 0;
+        let completed = 0;
+        let pending = 0;
+        
+        consultationsSnapshot.forEach(doc => {
+          total++;
+          const consultation = doc.data();
+          if (consultation.status === 'completed') {
+            completed++;
+          } else {
+            pending++;
+          }
+        });
+        
+        return { total, completed, pending };
+      } catch (error) {
+        console.error('Error calculating consultant stats:', error);
+        return { total: 0, completed: 0, pending: 0 };
+      }
+    }
+
+    // تسجيل الدخول من نافذة الاستشارة
+    document.getElementById('loginForConsultation').addEventListener('click', (e) => {
+      e.preventDefault();
+      consultantModal.hide();
+      showAuthForm('login');
+      authModal.show();
+    });
+
+    // إرسال طلب الاستشارة
+    document.getElementById('consultationForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const consultationData = {
+        userId: currentUser.uid,
+        userName: document.getElementById('clientName').value,
+        userEmail: document.getElementById('clientEmail').value,
+        userPhone: document.getElementById('clientPhone').value,
+        consultationType: document.getElementById('consultationTopic').value,
+        consultationDetails: document.getElementById('consultationDetails').value,
+        price: document.getElementById('consultationPrice').textContent.replace('السعر: ', '').replace(' دج', ''),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        status: 'pending'
+      };
+      
+      db.collection('consultations').add(consultationData)
+        .then(() => {
+          alert('تم إرسال طلب الاستشارة بنجاح، سيتم التواصل معك في أقرب وقت.');
+          consultantModal.hide();
+        })
+        .catch((error) => {
+          alert('خطأ في إرسال طلب الاستشارة: ' + error.message);
+        });
+    });
+
+    // ====== لوحة الإدارة ======
+    document.getElementById('sidebarAdminLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      closeSidebar();
+      showAdminPanel();
+    });
+
+    document.getElementById('backToSite').addEventListener('click', () => {
+      hideAdminPanel();
+    });
+
+    function showAdminPanel() {
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      loadAdminData();
+    }
+
+    function hideAdminPanel() {
+      document.getElementById('mainContent').style.display = 'block';
+      document.getElementById('adminPanel').style.display = 'none';
+    }
+
+    // التبديل بين أقسام لوحة الإدارة
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.getAttribute('data-tab');
+        
+        // إزالة النشاط من جميع الألسنة
+        document.querySelectorAll('.admin-tab').forEach(t => {
+          t.classList.remove('active');
+        });
+        
+        // إخفاء جميع الأقسام
+        document.querySelectorAll('.admin-section').forEach(section => {
+          section.classList.remove('active');
+        });
+        
+        // إظهار القسم المطلوب
+        tab.classList.add('active');
+        document.getElementById(`admin${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active');
+      });
+    });
+
+    // تحميل بيانات لوحة الإدارة
+    function loadAdminData() {
+      loadUsers();
+      loadConsultants();
+      loadConsultations();
+      loadNews();
+      loadServices();
+      loadDirectory();
+    }
+
+    // ====== إدارة المستخدمين ======
+    async function loadUsers() {
+      const usersTable = document.getElementById('usersTable');
+      
+      try {
+        usersTable.innerHTML = '<tr><td colspan="4" class="text-center">جاري التحميل...</td></tr>';
+        
+        const querySnapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+        
+        console.log(`تم العثور على ${querySnapshot.size} مستخدم في Firestore`);
+        
+        usersTable.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+          usersTable.innerHTML = `
+            <tr>
+              <td colspan="4" class="text-center">
+                لا يوجد مستخدمين مسجلين في قاعدة البيانات
+                <br>
+                <small class="text-muted">المستخدمون المسجلون في Authentication فقط لن يظهروا هنا</small>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+        
+        let userCount = 0;
+        querySnapshot.forEach(doc => {
+          userCount++;
+          const user = doc.data();
+          
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${user.name || 'غير معروف'} ${user.lastName || ''}</td>
+            <td>${user.email || 'غير معروف'}</td>
+            <td>${user.createdAt ? user.createdAt.toDate().toLocaleDateString('ar-SA') : 'غير معروف'}</td>
+            <td>
+              ${user.isAdmin ? '<span class="badge bg-success">مسؤول</span>' : ''}
+              <button class="btn btn-danger btn-sm" onclick="deleteUser('${doc.id}')">حذف</button>
+            </td>
+          `;
+          usersTable.appendChild(row);
+        });
+        
+      } catch (error) {
+        console.error('Error loading users:', error);
+        usersTable.innerHTML = `
+          <tr>
+            <td colspan="4" class="text-center text-danger">
+              خطأ في تحميل المستخدمين: ${error.message}
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // دالة لفحص بيانات المستخدمين
+    async function debugUsers() {
+      console.log('=== فحص بيانات المستخدمين ===');
+      
+      try {
+        // التحقق من Authentication
+        console.log('المستخدم الحالي في Authentication:', currentUser ? currentUser.email : 'لا يوجد');
+        
+        // التحقق من Firestore
+        const usersSnapshot = await db.collection('users').get();
+        console.log(`عدد المستخدمين في Firestore: ${usersSnapshot.size}`);
+        
+        usersSnapshot.forEach(doc => {
+          console.log('مستخدم في Firestore:', doc.id, doc.data());
+        });
+        
+        // إعادة تحميل الجدول
+        loadUsers();
+        
+      } catch (error) {
+        console.error('خطأ في فحص البيانات:', error);
+      }
+    }
+
+    // حذف مستخدم
+    window.deleteUser = function(userId) {
+      if (confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
+        db.collection('users').doc(userId).delete()
+          .then(() => {
+            loadUsers();
+            alert('تم حذف المستخدم بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في حذف المستخدم: ' + error.message);
+          });
+      }
+    };
+
+    // ====== إدارة المستشارين ======
+    async function loadConsultants() {
+      const consultantsTable = document.getElementById('consultantsTable');
+      
+      try {
+        consultantsTable.innerHTML = '<tr><td colspan="6" class="text-center">جاري التحميل...</td></tr>';
+        
+        const querySnapshot = await db.collection('consultants').orderBy('createdAt', 'desc').get();
+        
+        consultantsTable.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+          consultantsTable.innerHTML = '<tr><td colspan="6" class="text-center">لا يوجد مستشارين</td></tr>';
+          return;
+        }
+        
+        for (const doc of querySnapshot.docs) {
+          const consultant = doc.data();
+          const stats = await calculateConsultantStats(doc.id);
+          
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>
+              <img src="${consultant.img}" alt="${consultant.name}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+            </td>
+            <td>${consultant.name}</td>
+            <td>${consultant.title}</td>
+            <td>${consultant.price} دج</td>
+            <td>
+              <div class="consultant-stats">
+                <span class="badge bg-primary">الإجمالي: ${stats.total}</span>
+                <span class="badge bg-success">المكتملة: ${stats.completed}</span>
+                <span class="badge bg-warning">قيد الانتظار: ${stats.pending}</span>
+              </div>
+            </td>
+            <td>
+              <button class="btn btn-primary btn-sm" onclick="editConsultant('${doc.id}')">تعديل</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteConsultant('${doc.id}')">حذف</button>
+            </td>
+          `;
+          consultantsTable.appendChild(row);
+        }
+      } catch (error) {
+        console.error('Error loading consultants:', error);
+        consultantsTable.innerHTML = '<tr><td colspan="6" class="text-center">خطأ في تحميل البيانات</td></tr>';
+      }
+    }
+
+    // إضافة مستشار جديد
+    document.getElementById('addConsultantBtn').addEventListener('click', () => {
+      document.getElementById('consultantId').value = '';
+      document.getElementById('consultantNameInput').value = '';
+      document.getElementById('consultantTitleInput').value = '';
+      document.getElementById('consultantBioInput').value = '';
+      document.getElementById('consultantImageInput').value = '';
+      document.getElementById('consultantPriceInput').value = '';
+      document.getElementById('consultantEditModalLabel').textContent = 'إضافة مستشار جديد';
+      consultantEditModal.show();
+    });
+
+    // تعديل مستشار
+    window.editConsultant = function(consultantId) {
+      db.collection('consultants').doc(consultantId).get()
+        .then(doc => {
+          if (doc.exists) {
+            const consultant = doc.data();
+            document.getElementById('consultantId').value = consultantId;
+            document.getElementById('consultantNameInput').value = consultant.name;
+            document.getElementById('consultantTitleInput').value = consultant.title;
+            document.getElementById('consultantBioInput').value = consultant.bio;
+            document.getElementById('consultantImageInput').value = consultant.img;
+            document.getElementById('consultantPriceInput').value = consultant.price;
+            document.getElementById('consultantEditModalLabel').textContent = 'تعديل مستشار';
+            consultantEditModal.show();
+          }
+        })
+        .catch(error => {
+          console.error('Error loading consultant:', error);
+          alert('خطأ في تحميل بيانات المستشار');
+        });
+    };
+
+    // حفظ المستشار (إضافة/تعديل)
+    document.getElementById('consultantEditForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const consultantId = document.getElementById('consultantId').value;
+      const consultantData = {
+        name: document.getElementById('consultantNameInput').value,
+        title: document.getElementById('consultantTitleInput').value,
+        bio: document.getElementById('consultantBioInput').value,
+        img: document.getElementById('consultantImageInput').value,
+        price: parseInt(document.getElementById('consultantPriceInput').value),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      if (consultantId) {
+        // تحديث مستشار موجود
+        db.collection('consultants').doc(consultantId).update(consultantData)
+          .then(() => {
+            consultantEditModal.hide();
+            loadConsultants();
+            loadSiteConsultations();
+            alert('تم تحديث المستشار بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في تحديث المستشار: ' + error.message);
+          });
+      } else {
+        // إضافة مستشار جديد
+        consultantData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        
+        db.collection('consultants').add(consultantData)
+          .then(() => {
+            consultantEditModal.hide();
+            loadConsultants();
+            loadSiteConsultations();
+            alert('تم إضافة المستشار بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في إضافة المستشار: ' + error.message);
+          });
+      }
+    });
+
+    // حذف مستشار
+    window.deleteConsultant = function(consultantId) {
+      if (confirm('هل أنت متأكد من حذف هذا المستشار؟')) {
+        db.collection('consultants').doc(consultantId).delete()
+          .then(() => {
+            loadConsultants();
+            loadSiteConsultations();
+            alert('تم حذف المستشار بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في حذف المستشار: ' + error.message);
+          });
+      }
+    };
+
+    // ====== إدارة الاستشارات ======
+    async function loadConsultations() {
+      const consultationsTable = document.getElementById('consultationsTable');
+      
+      try {
+        consultationsTable.innerHTML = '<tr><td colspan="7" class="text-center">جاري التحميل...</td></tr>';
+        
+        const querySnapshot = await db.collection('consultations').orderBy('createdAt', 'desc').get();
+        
+        consultationsTable.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+          consultationsTable.innerHTML = '<tr><td colspan="7" class="text-center">لا يوجد استشارات</td></tr>';
+          return;
+        }
+        
+        for (const doc of querySnapshot.docs) {
+          const consultation = doc.data();
+          const statusBadge = getStatusBadge(consultation.status);
+          
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${consultation.userName}</td>
+            <td>${consultation.userEmail}</td>
+            <td>${consultation.consultationType}</td>
+            <td>${consultation.price} دج</td>
+            <td>${statusBadge}</td>
+            <td>${consultation.createdAt ? consultation.createdAt.toDate().toLocaleDateString('ar-SA') : 'غير معروف'}</td>
+            <td>
+              <button class="btn btn-success btn-sm" onclick="updateConsultationStatus('${doc.id}', 'completed')">مكتمل</button>
+              <button class="btn btn-warning btn-sm" onclick="updateConsultationStatus('${doc.id}', 'in-progress')">قيد التنفيذ</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteConsultation('${doc.id}')">حذف</button>
+            </td>
+          `;
+          consultationsTable.appendChild(row);
+        }
+      } catch (error) {
+        console.error('Error loading consultations:', error);
+        consultationsTable.innerHTML = '<tr><td colspan="7" class="text-center">خطأ في تحميل البيانات</td></tr>';
+      }
+    }
+
+    // إنشاء شارة الحالة
+    function getStatusBadge(status) {
+      const statuses = {
+        'pending': { class: 'status-pending', text: 'قيد الانتظار' },
+        'in-progress': { class: 'status-in-progress', text: 'قيد التنفيذ' },
+        'completed': { class: 'status-completed', text: 'مكتمل' }
+      };
+      
+      const statusInfo = statuses[status] || statuses['pending'];
+      return `<span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>`;
+    }
+
+    // تحديث حالة الاستشارة
+    window.updateConsultationStatus = function(consultationId, status) {
+      const statusText = {
+        'completed': 'مكتمل',
+        'in-progress': 'قيد التنفيذ',
+        'pending': 'قيد الانتظار'
+      }[status] || status;
+      
+      if (confirm(`هل تريد تغيير حالة الاستشارة إلى "${statusText}"؟`)) {
+        db.collection('consultations').doc(consultationId).update({
+          status: status,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+          loadConsultations();
+          loadConsultants(); // لتحديث إحصائيات المستشارين
+          alert('تم تحديث حالة الاستشارة بنجاح');
+        })
+        .catch(error => {
+          alert('خطأ في تحديث حالة الاستشارة: ' + error.message);
+        });
+      }
+    };
+
+    // حذف استشارة
+    window.deleteConsultation = function(consultationId) {
+      if (confirm('هل أنت متأكد من حذف هذه الاستشارة؟')) {
+        db.collection('consultations').doc(consultationId).delete()
+          .then(() => {
+            loadConsultations();
+            loadConsultants(); // لتحديث إحصائيات المستشارين
+            alert('تم حذف الاستشارة بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في حذف الاستشارة: ' + error.message);
+          });
+      }
+    };
+
+    // ====== إدارة الأخبار ======
+    async function loadNews() {
+      const newsTable = document.getElementById('newsTable');
+      
+      try {
+        newsTable.innerHTML = '<tr><td colspan="3" class="text-center">جاري التحميل...</td></tr>';
+        
+        const querySnapshot = await db.collection('news').orderBy('date', 'desc').get();
+        
+        newsTable.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+          newsTable.innerHTML = '<tr><td colspan="3" class="text-center">لا يوجد أخبار</td></tr>';
+          return;
+        }
+        
+        querySnapshot.forEach(doc => {
+          const newsItem = doc.data();
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${newsItem.title}</td>
+            <td>${newsItem.date || 'غير محدد'}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" onclick="editNews('${doc.id}')">تعديل</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteNews('${doc.id}')">حذف</button>
+            </td>
+          `;
+          newsTable.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error loading news:', error);
+        newsTable.innerHTML = '<tr><td colspan="3" class="text-center">خطأ في تحميل البيانات</td></tr>';
+      }
+    }
+
+    // إضافة/تعديل خبر
+    document.getElementById('addNewsBtn').addEventListener('click', () => {
+      document.getElementById('newsId').value = '';
+      document.getElementById('newsTitle').value = '';
+      document.getElementById('newsImage').value = '';
+      document.getElementById('newsContent').value = '';
+      document.getElementById('newsLink').value = '';
+      document.getElementById('newsEditModalLabel').textContent = 'إضافة خبر جديد';
+      newsEditModal.show();
+    });
+
+    window.editNews = function(newsId) {
+      db.collection('news').doc(newsId).get()
+        .then(doc => {
+          if (doc.exists) {
+            const newsItem = doc.data();
+            document.getElementById('newsId').value = newsId;
+            document.getElementById('newsTitle').value = newsItem.title;
+            document.getElementById('newsImage').value = newsItem.image || '';
+            document.getElementById('newsContent').value = newsItem.content;
+            document.getElementById('newsLink').value = newsItem.link || '';
+            document.getElementById('newsEditModalLabel').textContent = 'تعديل خبر';
+            newsEditModal.show();
+          }
+        })
+        .catch(error => {
+          console.error('Error loading news:', error);
+          alert('خطأ في تحميل الخبر');
+        });
+    };
+
+    document.getElementById('newsEditForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const newsId = document.getElementById('newsId').value;
+      const newsData = {
+        title: document.getElementById('newsTitle').value,
+        image: document.getElementById('newsImage').value,
+        content: document.getElementById('newsContent').value,
+        link: document.getElementById('newsLink').value,
+        date: new Date().toISOString().split('T')[0],
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      if (newsId) {
+        // تحديث خبر موجود
+        db.collection('news').doc(newsId).update(newsData)
+          .then(() => {
+            newsEditModal.hide();
+            loadNews();
+            loadSiteNews();
+            alert('تم تحديث الخبر بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في تحديث الخبر: ' + error.message);
+          });
+      } else {
+        // إضافة خبر جديد
+        newsData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        
+        db.collection('news').add(newsData)
+          .then(() => {
+            newsEditModal.hide();
+            loadNews();
+            loadSiteNews();
+            alert('تم إضافة الخبر بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في إضافة الخبر: ' + error.message);
+          });
+      }
+    });
+
+    // حذف خبر
+    window.deleteNews = function(newsId) {
+      if (confirm('هل أنت متأكد من حذف هذا الخبر؟')) {
+        db.collection('news').doc(newsId).delete()
+          .then(() => {
+            loadNews();
+            loadSiteNews();
+            alert('تم حذف الخبر بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في حذف الخبر: ' + error.message);
+          });
+      }
+    };
+
+    // ====== إدارة الخدمات ======
+    async function loadServices() {
+      const servicesTable = document.getElementById('servicesTable');
+      
+      try {
+        servicesTable.innerHTML = '<tr><td colspan="3" class="text-center">جاري التحميل...</td></tr>';
+        
+        const querySnapshot = await db.collection('services').orderBy('createdAt', 'desc').get();
+        
+        servicesTable.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+          servicesTable.innerHTML = '<tr><td colspan="3" class="text-center">لا يوجد خدمات</td></tr>';
+          return;
+        }
+        
+        querySnapshot.forEach(doc => {
+          const service = doc.data();
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${service.title}</td>
+            <td>خدمات</td>
+            <td>
+              <button class="btn btn-primary btn-sm" onclick="editService('${doc.id}')">تعديل</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteService('${doc.id}')">حذف</button>
+            </td>
+          `;
+          servicesTable.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error loading services:', error);
+        servicesTable.innerHTML = '<tr><td colspan="3" class="text-center">خطأ في تحميل البيانات</td></tr>';
+      }
+    }
+
+    // إضافة خدمة جديدة
+    document.getElementById('addServiceBtn').addEventListener('click', () => {
+      document.getElementById('serviceId').value = '';
+      document.getElementById('serviceTitle').value = '';
+      document.getElementById('serviceDescription').value = '';
+      document.getElementById('serviceDetails').value = '';
+      document.getElementById('serviceEditModalLabel').textContent = 'إضافة خدمة جديدة';
+      serviceEditModal.show();
+    });
+
+    window.editService = function(serviceId) {
+      db.collection('services').doc(serviceId).get()
+        .then(doc => {
+          if (doc.exists) {
+            const service = doc.data();
+            document.getElementById('serviceId').value = serviceId;
+            document.getElementById('serviceTitle').value = service.title;
+            document.getElementById('serviceDescription').value = service.description;
+            document.getElementById('serviceDetails').value = service.details;
+            document.getElementById('serviceEditModalLabel').textContent = 'تعديل خدمة';
+            serviceEditModal.show();
+          }
+        })
+        .catch(error => {
+          console.error('Error loading service:', error);
+          alert('خطأ في تحميل الخدمة');
+        });
+    };
+
+    document.getElementById('serviceEditForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const serviceId = document.getElementById('serviceId').value;
+      const serviceData = {
+        title: document.getElementById('serviceTitle').value,
+        description: document.getElementById('serviceDescription').value,
+        details: document.getElementById('serviceDetails').value,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      if (serviceId) {
+        // تحديث خدمة موجودة
+        db.collection('services').doc(serviceId).update(serviceData)
+          .then(() => {
+            serviceEditModal.hide();
+            loadServices();
+            loadSiteServices();
+            alert('تم تحديث الخدمة بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في تحديث الخدمة: ' + error.message);
+          });
+      } else {
+        // إضافة خدمة جديدة
+        serviceData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        
+        db.collection('services').add(serviceData)
+          .then(() => {
+            serviceEditModal.hide();
+            loadServices();
+            loadSiteServices();
+            alert('تم إضافة الخدمة بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في إضافة الخدمة: ' + error.message);
+          });
+      }
+    });
+
+    // حذف خدمة
+    window.deleteService = function(serviceId) {
+      if (confirm('هل أنت متأكد من حذف هذه الخدمة؟')) {
+        db.collection('services').doc(serviceId).delete()
+          .then(() => {
+            loadServices();
+            loadSiteServices();
+            alert('تم حذف الخدمة بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في حذف الخدمة: ' + error.message);
+          });
+      }
+    };
+
+    // ====== إدارة الدليل ======
+    async function loadDirectory() {
+      const directoryTable = document.getElementById('directoryTable');
+      
+      try {
+        directoryTable.innerHTML = '<tr><td colspan="3" class="text-center">جاري التحميل...</td></tr>';
+        
+        const querySnapshot = await db.collection('directory').orderBy('createdAt', 'desc').get();
+        
+        directoryTable.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+          directoryTable.innerHTML = '<tr><td colspan="3" class="text-center">لا يوجد عناصر في الدليل</td></tr>';
+          return;
+        }
+        
+        querySnapshot.forEach(doc => {
+          const directory = doc.data();
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${directory.title}</td>
+            <td>دليل</td>
+            <td>
+              <button class="btn btn-primary btn-sm" onclick="editDirectory('${doc.id}')">تعديل</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteDirectory('${doc.id}')">حذف</button>
+            </td>
+          `;
+          directoryTable.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error loading directory:', error);
+        directoryTable.innerHTML = '<tr><td colspan="3" class="text-center">خطأ في تحميل البيانات</td></tr>';
+      }
+    }
+
+    // إضافة عنصر دليل جديد
+    document.getElementById('addDirectoryBtn').addEventListener('click', () => {
+      document.getElementById('directoryId').value = '';
+      document.getElementById('directoryTitle').value = '';
+      document.getElementById('directoryDescription').value = '';
+      document.getElementById('directoryDetails').value = '';
+      document.getElementById('directoryEditModalLabel').textContent = 'إضافة عنصر دليل جديد';
+      directoryEditModal.show();
+    });
+
+    window.editDirectory = function(directoryId) {
+      db.collection('directory').doc(directoryId).get()
+        .then(doc => {
+          if (doc.exists) {
+            const directory = doc.data();
+            document.getElementById('directoryId').value = directoryId;
+            document.getElementById('directoryTitle').value = directory.title;
+            document.getElementById('directoryDescription').value = directory.description;
+            document.getElementById('directoryDetails').value = directory.details;
+            document.getElementById('directoryEditModalLabel').textContent = 'تعديل عنصر دليل';
+            directoryEditModal.show();
+          }
+        })
+        .catch(error => {
+          console.error('Error loading directory:', error);
+          alert('خطأ في تحميل العنصر');
+        });
+    };
+
+    document.getElementById('directoryEditForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const directoryId = document.getElementById('directoryId').value;
+      const directoryData = {
+        title: document.getElementById('directoryTitle').value,
+        description: document.getElementById('directoryDescription').value,
+        details: document.getElementById('directoryDetails').value,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      if (directoryId) {
+        // تحديث عنصر موجود
+        db.collection('directory').doc(directoryId).update(directoryData)
+          .then(() => {
+            directoryEditModal.hide();
+            loadDirectory();
+            loadSiteDirectory();
+            alert('تم تحديث العنصر بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في تحديث العنصر: ' + error.message);
+          });
+      } else {
+        // إضافة عنصر جديد
+        directoryData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        
+        db.collection('directory').add(directoryData)
+          .then(() => {
+            directoryEditModal.hide();
+            loadDirectory();
+            loadSiteDirectory();
+            alert('تم إضافة العنصر بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في إضافة العنصر: ' + error.message);
+          });
+      }
+    });
+
+    // حذف عنصر دليل
+    window.deleteDirectory = function(directoryId) {
+      if (confirm('هل أنت متأكد من حذف هذا العنصر؟')) {
+        db.collection('directory').doc(directoryId).delete()
+          .then(() => {
+            loadDirectory();
+            loadSiteDirectory();
+            alert('تم حذف العنصر بنجاح');
+          })
+          .catch(error => {
+            alert('خطأ في حذف العنصر: ' + error.message);
+          });
+      }
+    };
+
+    // ====== تحميل محتوى الموقع ======
+    function loadSiteNews() {
+      const newsGrid = document.getElementById('newsGrid');
+      newsGrid.innerHTML = '<div class="text-center">جاري تحميل الأخبار...</div>';
+      
+      db.collection('news').orderBy('date', 'desc').get()
+        .then(querySnapshot => {
+          newsGrid.innerHTML = '';
+          
+          if (querySnapshot.empty) {
+            newsGrid.innerHTML = '<div class="text-center">لا توجد أخبار حالياً</div>';
+            return;
+          }
+          
+          querySnapshot.forEach(doc => {
+            const newsItem = doc.data();
+            const newsCard = document.createElement('article');
+            newsCard.className = 'news-card';
+            newsCard.innerHTML = `
+              <img src="${newsItem.image || 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80'}" alt="${newsItem.title}">
+              <div class="news-body">
+                <h3>${newsItem.title}</h3>
+                <p>${newsItem.content.substring(0, 150)}...</p>
+              </div>
+              <div class="card-footer">
+                <button class="btn-news btn btn-primary" data-news="${doc.id}">عرض التفاصيل</button>
+              </div>
+            `;
+            newsGrid.appendChild(newsCard);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading news:', error);
+          newsGrid.innerHTML = '<div class="text-center">خطأ في تحميل الأخبار</div>';
+        });
+    }
+
+    // تحميل الخدمات في الموقع
+    function loadSiteServices() {
+      const servicesGrid = document.getElementById('servicesGrid');
+      servicesGrid.innerHTML = '<div class="text-center">جاري تحميل الخدمات...</div>';
+      
+      db.collection('services').get()
+        .then(querySnapshot => {
+          servicesGrid.innerHTML = '';
+          
+          if (querySnapshot.empty) {
+            servicesGrid.innerHTML = '<div class="text-center">لا توجد خدمات حالياً</div>';
+            return;
+          }
+          
+          querySnapshot.forEach(doc => {
+            const service = doc.data();
+            const serviceCard = document.createElement('div');
+            serviceCard.className = 'service-card';
+            serviceCard.innerHTML = `
+              <h4>${service.title}</h4>
+              <p>${service.description}</p>
+              <button class="btn-service" data-service="${doc.id}">عرض التفاصيل</button>
+            `;
+            servicesGrid.appendChild(serviceCard);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading services:', error);
+          servicesGrid.innerHTML = '<div class="text-center">خطأ في تحميل الخدمات</div>';
+        });
+    }
+
+    // تحميل الاستشارات في الموقع
+    function loadSiteConsultations() {
+      const consultingGrid = document.getElementById('consultingGrid');
+      consultingGrid.innerHTML = '<div class="text-center">جاري تحميل الاستشارات...</div>';
+      
+      db.collection('consultants').get()
+        .then(querySnapshot => {
+          consultingGrid.innerHTML = '';
+          
+          if (querySnapshot.empty) {
+            // إضافة بيانات افتراضية إذا لم توجد استشارات
+            loadDefaultConsultants();
+            return;
+          }
+          
+          querySnapshot.forEach(doc => {
+            const consultant = doc.data();
+            const consultingCard = document.createElement('div');
+            consultingCard.className = 'consulting-card';
+            consultingCard.innerHTML = `
+              <h5>${consultant.title}</h5>
+              <p>${consultant.bio.substring(0, 100)}...</p>
+              <div class="consultation-price">السعر: ${consultant.price} دج</div>
+              <button class="btn-consult" data-consultant="${doc.id}">استشارة مع خبير</button>
+            `;
+            consultingGrid.appendChild(consultingCard);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading consultants:', error);
+          consultingGrid.innerHTML = '<div class="text-center">خطأ في تحميل الاستشارات</div>';
+        });
+    }
+
+    // تحميل الدليل في الموقع
+    function loadSiteDirectory() {
+      const directoryGrid = document.getElementById('directoryGrid');
+      directoryGrid.innerHTML = '<div class="text-center">جاري تحميل الدليل...</div>';
+      
+      db.collection('directory').get()
+        .then(querySnapshot => {
+          directoryGrid.innerHTML = '';
+          
+          if (querySnapshot.empty) {
+            directoryGrid.innerHTML = '<div class="text-center">لا توجد عناصر في الدليل حالياً</div>';
+            return;
+          }
+          
+          querySnapshot.forEach(doc => {
+            const directory = doc.data();
+            const directoryCard = document.createElement('div');
+            directoryCard.className = 'directory-card';
+            directoryCard.innerHTML = `
+              <h5>${directory.title}</h5>
+              <p>${directory.description}</p>
+              <button class="btn-directory" data-directory="${doc.id}">عرض التفاصيل</button>
+            `;
+            directoryGrid.appendChild(directoryCard);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading directory:', error);
+          directoryGrid.innerHTML = '<div class="text-center">خطأ في تحميل الدليل</div>';
+        });
+    }
+
+    // تحميل الفريق في الموقع
+    function loadSiteTeam() {
+      const teamGrid = document.getElementById('teamGrid');
+      // يمكن إضافة اتصال بـ Firebase للفريق لاحقاً
+      teamGrid.innerHTML = `
+        <div class="team-card">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="د. أحمد السعدون" class="team-img">
+          <div class="team-info">
+            <h4 class="team-name">د. أحمد السعدون</h4>
+            <p class="team-role">المدير التنفيذي</p>
+            <p class="team-bio">خبير في العلاقات العامة مع أكثر من 15 عاماً من الخبرة في القطاعين الحكومي والخاص. حاصل على دكتوراه في الاتصال المؤسسي.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="أ. فاطمة الناصر" class="team-img">
+          <div class="team-info">
+            <h4 class="team-name">أ. فاطمة الناصر</h4>
+            <p class="team-role">مديرة الاستشارات</p>
+            <p class="team-bio">استشارية متخصصة في إدارة الأزمات والطوارئ مع خبرة تزيد عن 12 عاماً. حاصلة على عدة شهادات معتمدة في إدارة المخاطر.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // إضافة بيانات افتراضية للمستشارين
+    function loadDefaultConsultants() {
+      const consultingGrid = document.getElementById('consultingGrid');
+      const defaultConsultants = [
+        {
+          title: "خبير التشريفات والمراسم",
+          bio: "خبير معتمد في التشريفات والمراسم البروتوكولية مع أكثر من 15 عاماً من الخبرة في تنظيم الفعاليات الرسمية والحكومية.",
+          price: 500
+        },
+        {
+          title: "خبيرة إدارة الأزمات", 
+          bio: "استشارية متخصصة في إدارة الأزمات والطوارئ مع خبرة تزيد عن 12 عاماً في تطوير خطط الطوارئ وإدارة السمعة خلال الأزمات.",
+          price: 600
+        }
+      ];
+
+      defaultConsultants.forEach((consultant, index) => {
+        const consultingCard = document.createElement('div');
+        consultingCard.className = 'consulting-card';
+        consultingCard.innerHTML = `
+          <h5>${consultant.title}</h5>
+          <p>${consultant.bio.substring(0, 100)}...</p>
+          <div class="consultation-price">السعر: ${consultant.price} دج</div>
+          <button class="btn-consult" data-consultant="default-${index}">استشارة مع خبير</button>
+        `;
+        consultingGrid.appendChild(consultingCard);
+      });
+    }
+
+    // ====== تهيئة البيانات الأولية ======
+    async function initializeFirebaseData() {
+      try {
+        // التحقق من وجود بيانات المستشارين
+        const consultantsSnapshot = await db.collection('consultants').get();
+        if (consultantsSnapshot.empty) {
+          console.log('إضافة بيانات المستشارين الأولية...');
+          const initialConsultants = {
+            1: {
+              name: "د. أحمد السعدون",
+              title: "خبير التشريفات والمراسم",
+              bio: "خبير معتمد في التشريفات والمراسم البروتوكولية مع أكثر من 15 عاماً من الخبرة في تنظيم الفعاليات الرسمية والحكومية. عمل مستشاراً لعدد من الوزارات والمؤسسات الرسمية في تصميم وتنفيذ بروتوكولات الاستقبال والتشريفات.",
+              img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+              price: 500
+            },
+            2: {
+              name: "أ. فاطمة الناصر",
+              title: "خبيرة إدارة الأزمات",
+              bio: "استشارية متخصصة في إدارة الأزمات والطوارئ مع خبرة تزيد عن 12 عاماً في تطوير خطط الطوارئ وإدارة السمعة خلال الأزمات. حاصلة على شهادات معتمدة في إدارة المخاطر والأزمات من مؤسسات دولية مرموقة.",
+              img: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+              price: 600
+            }
+          };
+          
+          for (const [key, consultant] of Object.entries(initialConsultants)) {
+            await db.collection('consultants').doc(key).set({
+              ...consultant,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          }
+        }
+
+        console.log('تم تهيئة البيانات الأولية بنجاح');
+      } catch (error) {
+        console.error('خطأ في تهيئة البيانات الأولية:', error);
+      }
+    }
+
+    // ====== تهيئة الموقع عند التحميل ======
+    document.addEventListener('DOMContentLoaded', async () => {
+      // إعداد الشعار
+      setupLogo();
+      
+      // تهيئة البيانات الأولية
+      await initializeFirebaseData();
+      
+      // تحميل المحتوى الافتراضي
+      loadSiteNews();
+      loadSiteServices();
+      loadSiteConsultations();
+      loadSiteDirectory();
+      loadSiteTeam();
+      
+      // مراقبة حالة المصادقة
+      auth.onAuthStateChanged(user => {
+        currentUser = user;
+        checkIfAdmin();
+        updateUI();
+      });
+    });
+
+    // ====== إضافة تأثير التمييز عند التمرير ======
+    window.addEventListener('hashchange', ()=>{
+      const id = location.hash.replace('#','');
+      if(!id) return;
+      const el = document.getElementById(id);
+      if(el){
+        el.classList.add('highlight-temp');
+        setTimeout(()=> el.classList.remove('highlight-temp'), 1400);
+      }
+    });
+
+    // إضافة نمط التمييز
+    const style = document.createElement('style');
+    style.innerHTML = `.highlight-temp { box-shadow: 0 0 30px rgba(26, 58, 95, 0.25) !important; transition: box-shadow 1s ease; }`;
+    document.head.appendChild(style);
+
+    // ====== إمكانية الوصول: إغلاق بالأزرار ======
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape') {
+        closeSidebar();
+        searchBox.classList.remove('visible');
+        searchBox.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

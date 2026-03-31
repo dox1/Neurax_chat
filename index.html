@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SYSTEM ANALYSIS</title>
+  <style>
+    :root{
+      --bg:#000;
+      --fg:#00ffcc;
+      --fg2:#8ef7e8;
+      --dim:rgba(0,255,204,.45);
+      --panel:rgba(0,255,204,.05);
+      --line:rgba(0,255,204,.18);
+      --danger:#ff4b4b;
+      --warn:#ffcf5a;
+      --shadow:0 0 24px rgba(0,255,204,.12);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;overflow:hidden}
+
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,.035), rgba(0,0,0,0) 3px),
+        linear-gradient(90deg, rgba(255,255,255,.02), rgba(0,0,0,0) 20%, rgba(255,255,255,.02));
+      background-size:100% 6px, 100% 100%;
+      mix-blend-mode:screen;
+      opacity:.25;
+      z-index:20;
+    }
+
+    .wrap{
+      position:relative;
+      width:100%;
+      height:100%;
+      padding:14px;
+      padding-top:calc(14px + env(safe-area-inset-top));
+      padding-bottom:calc(14px + env(safe-area-inset-bottom));
+    }
+
+    .topbar{
+      height:54px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(6px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 14px;
+      margin-bottom:12px;
+    }
+    .brand{display:flex;flex-direction:column;gap:2px}
+    .brand .t{font-size:12px;letter-spacing:2px}
+    .brand .s{font-size:10px;color:var(--dim)}
+    .state{font-size:10px;letter-spacing:2px;color:var(--warn);text-transform:uppercase}
+
+    .screen{
+      position:relative;
+      height:calc(100% - 66px);
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:radial-gradient(circle at top, rgba(0,255,204,.09), transparent 35%), rgba(0,255,204,.03);
+      box-shadow:var(--shadow), inset 0 0 40px rgba(0,255,204,.03);
+      overflow:hidden;
+    }
+
+    .scan-grid{
+      position:absolute; inset:0;
+      background:
+        linear-gradient(rgba(0,255,204,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,204,.05) 1px, transparent 1px);
+      background-size:100% 32px, 32px 100%;
+      opacity:.08;
+      pointer-events:none;
+    }
+
+    .center{
+      position:absolute; inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+
+    .card{
+      width:min(92vw, 440px);
+      min-height:180px;
+      border:1px solid rgba(0,255,204,.35);
+      border-radius:22px;
+      background:rgba(0,255,204,.06);
+      box-shadow:0 0 30px rgba(0,255,204,.12), inset 0 0 26px rgba(0,255,204,.05);
+      backdrop-filter:blur(8px);
+      padding:18px 16px 16px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      opacity:0;
+      transform:translateY(14px) scale(.98);
+      transition:opacity .45s ease, transform .45s ease, filter .45s ease;
+      text-align:center;
+      position:relative;
+    }
+
+    .card.show{
+      opacity:1;
+      transform:translateY(0) scale(1);
+    }
+
+    .card.hide{
+      opacity:0;
+      transform:translateY(-10px) scale(.97);
+      filter:blur(2px);
+    }
+
+    .tag{
+      align-self:center;
+      margin-bottom:12px;
+      font-size:10px;
+      letter-spacing:2px;
+      color:#000;
+      background:var(--fg);
+      padding:3px 10px;
+      border-radius:999px;
+      width:max-content;
+      text-transform:uppercase;
+      box-shadow:0 0 14px rgba(0,255,204,.18);
+    }
+
+    .title{
+      font-size:clamp(22px, 5.2vw, 30px);
+      line-height:1.15;
+      letter-spacing:1px;
+      margin:0 0 10px;
+      text-shadow:0 0 10px rgba(0,255,204,.16);
+      word-break:break-word;
+    }
+
+    .value{
+      font-size:clamp(18px, 4.8vw, 24px);
+      color:#dcfffb;
+      line-height:1.45;
+      text-shadow:0 0 8px rgba(0,255,204,.12);
+      word-break:break-word;
+    }
+
+    .meta{
+      margin-top:12px;
+      color:var(--dim);
+      font-size:11px;
+      letter-spacing:1px;
+      line-height:1.5;
+    }
+
+    .typing{
+      display:inline-block;
+      border-right:2px solid var(--fg);
+      padding-right:2px;
+      animation:caret .8s steps(1) infinite;
+    }
+
+    @keyframes caret{50%{border-color:transparent}}
+
+    .bars{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height:110px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      gap:6px;
+      padding:0 12px 12px;
+      opacity:.9;
+      pointer-events:none;
+    }
+    .bar{
+      width:10px;
+      border-radius:8px 8px 0 0;
+      background:linear-gradient(to top, rgba(0,255,204,.35), rgba(0,255,204,1));
+      box-shadow:0 0 10px rgba(0,255,204,.15);
+      transform-origin:bottom;
+      animation:pulse .5s infinite alternate ease-in-out;
+    }
+    @keyframes pulse{from{transform:scaleY(.25);opacity:.5}to{transform:scaleY(1);opacity:1}}
+
+    .radar{
+      position:absolute;
+      right:-46px;
+      top:-46px;
+      width:160px;
+      height:160px;
+      border:1px solid rgba(0,255,204,.14);
+      border-radius:50%;
+      opacity:.55;
+      overflow:hidden;
+      pointer-events:none;
+      filter:blur(.2px);
+    }
+    .radar::before{
+      content:"";
+      position:absolute; inset:12px;
+      border:1px solid rgba(0,255,204,.14);
+      border-radius:50%;
+    }
+    .radar::after{
+      content:"";
+      position:absolute; inset:0;
+      background:conic-gradient(from 0deg, rgba(0,255,204,.0) 0 70%, rgba(0,255,204,.6) 75%, rgba(0,255,204,0) 100%);
+      animation:spin 3.8s linear infinite;
+      transform-origin:center;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .flash{
+      position:fixed; inset:0;
+      background:rgba(255,255,255,.18);
+      opacity:0;
+      pointer-events:none;
+      z-index:30;
+    }
+    .flash.on{animation:flash .22s ease-out}
+    @keyframes flash{0%{opacity:0}35%{opacity:.85}100%{opacity:0}}
+
+    .glitch{animation:glitch .09s infinite linear;color:var(--danger)!important}
+    @keyframes glitch{0%{transform:translate(1px,-1px)}50%{transform:translate(-1px,1px)}100%{transform:translate(1px,1px)}}
+
+    .controls{
+      position:absolute;
+      left:14px;
+      right:14px;
+      bottom:14px;
+      display:flex;
+      gap:10px;
+      z-index:5;
+    }
+    .btn{
+      flex:1;
+      border:1px solid var(--line);
+      background:rgba(0,255,204,.04);
+      color:var(--fg);
+      border-radius:14px;
+      padding:12px 14px;
+      font:inherit;
+      letter-spacing:1px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(6px);
+    }
+
+    .corner-note{
+      position:absolute;
+      top:14px; left:14px; right:14px;
+      font-size:10px;
+      color:rgba(0,255,204,.28);
+      letter-spacing:1px;
+      text-align:center;
+      pointer-events:none;
+      z-index:2;
+    }
+
+    @media (max-width:420px){
+      .topbar{height:60px}
+      .screen{height:calc(100% - 72px)}
+      .card{width:94vw; min-height:190px}
+    }
+  </style>
+</head>
+<body>
+  <div class="flash" id="flash"></div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="t">NEURAL TRACE</div>
+        <div class="s">mobile visual simulation</div>
+      </div>
+      <div class="state" id="state">Idle</div>
+    </div>
+
+    <div class="screen">
+      <div class="scan-grid"></div>
+      <div class="corner-note">SINGLE-VIEW MODE — each result appears one at a time, then fades out</div>
+
+      <div class="center">
+        <div class="card" id="card">
+          <div class="radar"></div>
+          <div class="tag" id="tag">CLASSIFIED</div>
+          <h1 class="title" id="title">SYSTEM READY</h1>
+          <div class="value" id="value">Tap BEGIN to start the scan.</div>
+          <div class="meta" id="meta">Visual only. No real device data is collected.</div>
+        </div>
+      </div>
+
+      <div class="bars" id="bars" aria-hidden="true"></div>
+
+      <div class="controls">
+        <button class="btn" id="beginBtn">BEGIN SCAN</button>
+        <button class="btn" id="replayBtn">REPLAY</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const card = document.getElementById('card');
+    const tag = document.getElementById('tag');
+    const title = document.getElementById('title');
+    const value = document.getElementById('value');
+    const meta = document.getElementById('meta');
+    const stateEl = document.getElementById('state');
+    const bars = document.getElementById('bars');
+    const flash = document.getElementById('flash');
+    const beginBtn = document.getElementById('beginBtn');
+    const replayBtn = document.getElementById('replayBtn');
+
+    const sequence = [
+      { tag:'BOOT', title:'SYSTEM INITIALIZING', value:'Decrypting the session interface...', meta:'Boot sequence engaged.' },
+      { tag:'SCAN', title:'DEVICE FOUND', value:'Infinix Smart 9', meta:'Device fingerprint recognized.' },
+      { tag:'NETWORK', title:'CONNECTION STATE', value:'Active', meta:'Signal path stable.' },
+      { tag:'PROFILE', title:'ALIAS DETECTED', value:'Aya / Khadija', meta:'Identity markers matched.' },
+      { tag:'DATE', title:'BIRTH RECORD', value:'17 May 2008', meta:'Chronology locked.' },
+      { tag:'STUDY', title:'EDUCATION TRACK', value:'2nd Year — Literature & Philosophy', meta:'Academic classification complete.' },
+      { tag:'SOCIAL', title:'HANDLE RECORD', value:'Instagram: @soy.lunaza', meta:'Public profile reference stored as fictional data.' },
+      { tag:'SOCIAL', title:'HANDLE RECORD', value:'Facebook: lachica zafira', meta:'Public profile reference stored as fictional data.' },
+      { tag:'LINKS', title:'FAMILY NODES', value:'Mother: Zahra / Brother: Karim', meta:'Relationship map assembled.' },
+      { tag:'LOCATION', title:'LAST KNOWN NODE', value:'Saida', meta:'Location marker displayed as fictional reference.' },
+      { tag:'TRACE', title:'FRIEND GROUP', value:'Age set: 18 / Nour: younger than the group', meta:'Social circle classification complete.' },
+      { tag:'TRACE', title:'BEHAVIOR ANALYSIS', value:'High attention. Deep curiosity. Strong focus.', meta:'Pattern intensity increasing.' },
+      { tag:'ALERT', title:'DEEP SIGNAL', value:'An operator is behind this interface...', meta:'Shadow layer activated.' },
+      { tag:'SIGNATURE', title:'FINAL MARK', value:'Designed in secret.', meta:'Session complete.' }
+    ];
+
+    let running = false;
+    let cancelToken = 0;
+
+    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    function vibrate(pattern){ if (navigator.vibrate) navigator.vibrate(pattern); }
+
+    function makeBars(){
+      bars.innerHTML = '';
+      const count = Math.min(26, Math.max(18, Math.floor(window.innerWidth / 16)));
+      for(let i=0;i<count;i++){
+        const b = document.createElement('div');
+        b.className = 'bar';
+        b.style.height = (18 + Math.random() * 92) + 'px';
+        b.style.animationDelay = (Math.random() * 0.5) + 's';
+        bars.appendChild(b);
+      }
+    }
+
+    function flashOnce(){
+      flash.classList.remove('on');
+      void flash.offsetWidth;
+      flash.classList.add('on');
+    }
+
+    async function typeInto(el, text, speed = 24, token = 0){
+      el.textContent = '';
+      el.classList.add('typing');
+      for(let i = 0; i < text.length; i++){
+        if(token !== cancelToken) return false;
+        el.textContent += text[i];
+        await sleep(speed);
+      }
+      el.classList.remove('typing');
+      return true;
+    }
+
+    async function showFrame(item, holdMs = 1400, token = 0){
+      if(token !== cancelToken) return;
+
+      stateEl.textContent = item.tag;
+      tag.textContent = item.tag;
+      title.classList.remove('glitch');
+      value.classList.remove('glitch');
+      meta.classList.remove('glitch');
+
+      card.classList.remove('hide');
+      card.classList.add('show');
+
+      await typeInto(title, item.title, 18, token);
+      if(token !== cancelToken) return;
+      await typeInto(value, item.value, 22, token);
+      if(token !== cancelToken) return;
+      await typeInto(meta, item.meta, 16, token);
+
+      if (item.tag === 'SCAN' || item.tag === 'ALERT' || item.tag === 'SIGNATURE') {
+        flashOnce();
+        vibrate([120, 60, 120]);
+      } else if (item.tag === 'DATE' || item.tag === 'PROFILE') {
+        vibrate([180, 80, 180]);
+      } else {
+        vibrate([60]);
+      }
+
+      await sleep(holdMs);
+      if(token !== cancelToken) return;
+
+      card.classList.add('hide');
+      card.classList.remove('show');
+      await sleep(420);
+    }
+
+    async function fakeProgress(token = 0){
+      const prog = [
+        'Scanning... 12%',
+        'Scanning... 28%',
+        'Scanning... 44%',
+        'Scanning... 61%',
+        'Scanning... 79%',
+        'Scanning... 93%',
+        'Scan complete.'
+      ];
+      for (const line of prog){
+        if(token !== cancelToken) return;
+        stateEl.textContent = 'SCANNING';
+        await showFrame({ tag:'SCAN', title:'LIVE TRACE', value:line, meta:'Deepening analysis.' }, 900, token);
+      }
+    }
+
+    async function start(){
+      if(running) return;
+      running = true;
+      cancelToken++;
+      const token = cancelToken;
+
+      beginBtn.disabled = true;
+      replayBtn.disabled = true;
+      makeBars();
+      stateEl.textContent = 'BOOT';
+
+      try {
+        await showFrame(sequence[0], 1200, token);
+        await fakeProgress(token);
+        for (let i = 1; i < sequence.length; i++) {
+          if(token !== cancelToken) break;
+          if (i === 8) {
+            card.classList.add('glitch');
+            value.classList.add('glitch');
+            flashOnce();
+          }
+          await showFrame(sequence[i], i >= 7 ? 1600 : 1250, token);
+          card.classList.remove('glitch');
+          value.classList.remove('glitch');
+        }
+      } finally {
+        beginBtn.disabled = false;
+        replayBtn.disabled = false;
+        running = false;
+      }
+    }
+
+    function resetView(){
+      cancelToken++;
+      running = false;
+      tag.textContent = 'CLASSIFIED';
+      title.textContent = 'SYSTEM READY';
+      value.textContent = 'Tap BEGIN to start the scan.';
+      meta.textContent = 'Visual only. No real device data is collected.';
+      stateEl.textContent = 'Idle';
+      card.className = 'card show';
+      makeBars();
+    }
+
+    beginBtn.addEventListener('click', start);
+    replayBtn.addEventListener('click', async () => { resetView(); await sleep(200); start(); });
+    window.addEventListener('resize', makeBars);
+
+    makeBars();
+    card.classList.add('show');
+  </script>
+</body>
+</html>
